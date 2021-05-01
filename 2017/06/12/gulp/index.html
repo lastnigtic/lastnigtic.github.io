@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="一、开始使用 gulp，需知道 4 个 API： **gulp.task():**用来定义任务, 格式：gulp.task(name[, deps], fn) name 为任务名 deps 是当前定义的任务需要依赖的其他任务，为一个数组。当前定义的任务会在所有依赖的任务执行完毕后才开始执行。如果没有依赖，则可省略这个参数　　　　　　　　 fn 为任务函数，我们把任务要执行的代码都写在里面。该参数也">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gulp基础使用方法记录">
+<meta property="og:url" content="http://example.com/2017/06/12/gulp/index.html">
+<meta property="og:site_name" content="Blog of lastnigtic">
+<meta property="og:description" content="一、开始使用 gulp，需知道 4 个 API： **gulp.task():**用来定义任务, 格式：gulp.task(name[, deps], fn) name 为任务名 deps 是当前定义的任务需要依赖的其他任务，为一个数组。当前定义的任务会在所有依赖的任务执行完毕后才开始执行。如果没有依赖，则可省略这个参数　　　　　　　　 fn 为任务函数，我们把任务要执行的代码都写在里面。该参数也">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-06-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-05-01T15:38:51.998Z">
+<meta property="article:author" content="lastnigtic">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>gulp基础使用方法记录</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2017/06/12/ES6-promise/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2017/06/11/html-float/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2017/06/12/gulp/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2017/06/12/gulp/&text=gulp基础使用方法记录"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2017/06/12/gulp/&title=gulp基础使用方法记录"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2017/06/12/gulp/&is_video=false&description=gulp基础使用方法记录"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=gulp基础使用方法记录&body=Check out this article: http://example.com/2017/06/12/gulp/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2017/06/12/gulp/&title=gulp基础使用方法记录"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2017/06/12/gulp/&title=gulp基础使用方法记录"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2017/06/12/gulp/&title=gulp基础使用方法记录"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2017/06/12/gulp/&title=gulp基础使用方法记录"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2017/06/12/gulp/&name=gulp基础使用方法记录&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2017/06/12/gulp/&t=gulp基础使用方法记录"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%BC%80%E5%A7%8B"><span class="toc-number">1.</span> <span class="toc-text">一、开始</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">二、实例</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        gulp基础使用方法记录
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lastnigtic</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-06-11T16:00:00.000Z" itemprop="datePublished">2017-06-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="一、开始"><a href="#一、开始" class="headerlink" title="一、开始"></a>一、开始</h2><p>使用 gulp，需知道 4 个 API：</p>
+<p>**gulp.task():**用来定义任务,</p>
+<p>格式：gulp.task(name[, deps], fn)</p>
+<p>name 为任务名</p>
+<p>deps 是当前定义的任务需要依赖的其他任务，为一个数组。当前定义的任务会在所有依赖的任务执行完毕后才开始执行。如果没有依赖，则可省略这个参数<br>　　　　　　　　 fn 为任务函数，我们把任务要执行的代码都写在里面。该参数也是可选的。</p>
+<p><strong>gulp.src()：</strong>用来读取文件,</p>
+<p>格式：gulp.src(globs[, options])，</p>
+<p>globs 参数是文件匹配模式(类似正则表达式)，用来匹配文件路径(包括文件名)，当然这里也可以直接指定某个具体的文件路径。当有多个匹配模式时，该参数可以为一个数组。<br>　　　　　　　　 options 为可选参数。通常情况下我们不需要用到。</p>
+<p><strong>gulp.dest()：</strong>用来写文件的：,</p>
+<p>格式：gulp.dest(path[,options])</p>
+<p>path 为写入文件的路径<br>　　　　　　　　　 options 为一个可选的参数对象，通常我们不需要用到</p>
+<p>**gulp.watch()**：用来监视文件的变化，当文件发生变化后，我们可以利用它来执行相应的任务，例如文件压缩等,</p>
+<p>格式：gulp.watch(glob[, opts], tasks)</p>
+<p>glob 为要监视的文件匹配模式，规则和用法与 gulp.src()方法中的 glob 相同。<br>　　　　　　　　　 opts 为一个可选的配置对象，通常不需要用到<br>　　　　　　　　 　 tasks 为文件变化后要执行的任务，为一个数组</p>
+<h2 id="二、实例"><a href="#二、实例" class="headerlink" title="二、实例"></a>二、实例</h2><p>需要先安装 gulp<br>npm install -g gulp<br>手动建立一个 gulpfile.js 文件，作为入口，<br>初始化，引入 gulp 　　<br>npm init;<br>npm install –save-dev gulp;<br>然后在 gulpfile.js 写入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">var gulp &#x3D; require(&#39;gulp&#39;);</span><br><span class="line"></span><br><span class="line">var plugins &#x3D; require(&#39;gulp-load-plugins&#39;)();</span><br><span class="line"></span><br><span class="line">var src &#x3D; &#123;</span><br><span class="line"> js: &#39;js&#x2F;*.js&#39;,</span><br><span class="line"> html: &#39;.&#x2F;*.html&#39;,</span><br><span class="line"> css: &#39;css&#x2F;*css&#39;,</span><br><span class="line"> img: &#39;img&#x2F;**&#39;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var buildGulp &#x3D; &#123;</span><br><span class="line"> &#x2F;&#x2F; html 打包</span><br><span class="line"> buildHtml: () &#x3D;&gt; &#123;</span><br><span class="line">     gulp.src(src.html)</span><br><span class="line">     .pipe(plugins.minifyHtml())</span><br><span class="line">     .pipe(gulp.dest(&#39;.&#x2F;dist&#39;));</span><br><span class="line"> &#125;,</span><br><span class="line"> &#x2F;&#x2F; css 打包</span><br><span class="line"> buildCss: () &#x3D;&gt; &#123;</span><br><span class="line">     gulp.src(src.css)</span><br><span class="line">     .pipe(plugins.minifyCss())</span><br><span class="line">     .pipe(gulp.dest(&#39;dist&#x2F;css&#39;));</span><br><span class="line"> &#125;,</span><br><span class="line"> &#x2F;&#x2F; js 打包</span><br><span class="line"> buildJs: () &#x3D;&gt; &#123;</span><br><span class="line">     gulp.src(src.img)</span><br><span class="line">     .pipe(plugins.imagemin())</span><br><span class="line">     .pipe(gulp.dest(&#39;dist&#x2F;img&#39;));</span><br><span class="line"> &#125;,</span><br><span class="line"> &#x2F;&#x2F; img打包</span><br><span class="line"> buildImg: () &#x3D;&gt; &#123;</span><br><span class="line">     gulp.src(src.js)</span><br><span class="line">     .pipe(plugins.uglify())</span><br><span class="line">     .pipe(gulp.dest(&#39;dist&#x2F;js&#39;));</span><br><span class="line"> &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">gulp.task(&#39;default&#39;,function()&#123;</span><br><span class="line"> gulp.start(&#39;build&#39;)</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">gulp.task(&#39;build&#39;, function()&#123;</span><br><span class="line"> for ( var i in buildGulp)&#123;</span><br><span class="line">     buildGulp[i]();</span><br><span class="line"> &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>我们用 gulp-uglify 压缩 js, gulp-minify-css 压缩 css, gulp-minify-html 压缩 html，gulp-imagemin 压缩图片</p>
+<p>为避免在文件头部引入依赖时过去冗长，引入 gulp-load-plugins 来从 package.json 中引入依赖，通过调用实例中的方法来加载依赖，加载方式为按需加载</p>
+<p>最后执行 gulp，会从名称为 default 的 task 开始执行，打包文件，输出的文件由 gulp.dest 设置在 dist 目录下</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%BC%80%E5%A7%8B"><span class="toc-number">1.</span> <span class="toc-text">一、开始</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">二、实例</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2017/06/12/gulp/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2017/06/12/gulp/&text=gulp基础使用方法记录"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2017/06/12/gulp/&title=gulp基础使用方法记录"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2017/06/12/gulp/&is_video=false&description=gulp基础使用方法记录"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=gulp基础使用方法记录&body=Check out this article: http://example.com/2017/06/12/gulp/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2017/06/12/gulp/&title=gulp基础使用方法记录"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2017/06/12/gulp/&title=gulp基础使用方法记录"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2017/06/12/gulp/&title=gulp基础使用方法记录"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2017/06/12/gulp/&title=gulp基础使用方法记录"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2017/06/12/gulp/&name=gulp基础使用方法记录&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2017/06/12/gulp/&t=gulp基础使用方法记录"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    lastnigtic
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

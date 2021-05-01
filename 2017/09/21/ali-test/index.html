@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="一、选择题1. 下列程序运行的结果12345678910111213141516171819202122232425262728293031323334353637383940let obj &#x3D; Object.create(&amp;#123;name: &#39;King&#39;&amp;#125;);    function foo(obj)&amp;#123;        Object.setProt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2017 阿里前端笔试题">
+<meta property="og:url" content="http://example.com/2017/09/21/ali-test/index.html">
+<meta property="og:site_name" content="Blog of lastnigtic">
+<meta property="og:description" content="一、选择题1. 下列程序运行的结果12345678910111213141516171819202122232425262728293031323334353637383940let obj &#x3D; Object.create(&amp;#123;name: &#39;King&#39;&amp;#125;);    function foo(obj)&amp;#123;        Object.setProt">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/ali-test/0.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/ali-test/1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/ali-test/3.png">
+<meta property="article:published_time" content="2017-09-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-05-01T15:45:34.950Z">
+<meta property="article:author" content="lastnigtic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/ali-test/0.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>2017 阿里前端笔试题</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2017/09/23/lianbiao/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2017/09/21/if-iife/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2017/09/21/ali-test/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2017/09/21/ali-test/&text=2017 阿里前端笔试题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2017/09/21/ali-test/&title=2017 阿里前端笔试题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2017/09/21/ali-test/&is_video=false&description=2017 阿里前端笔试题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=2017 阿里前端笔试题&body=Check out this article: http://example.com/2017/09/21/ali-test/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2017/09/21/ali-test/&title=2017 阿里前端笔试题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2017/09/21/ali-test/&title=2017 阿里前端笔试题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2017/09/21/ali-test/&title=2017 阿里前端笔试题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2017/09/21/ali-test/&title=2017 阿里前端笔试题"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2017/09/21/ali-test/&name=2017 阿里前端笔试题&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2017/09/21/ali-test/&t=2017 阿里前端笔试题"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%80%89%E6%8B%A9%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">一、选择题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%8B%E5%88%97%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E7%9A%84%E7%BB%93%E6%9E%9C"><span class="toc-number">1.1.</span> <span class="toc-text">1. 下列程序运行的结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.2.</span> <span class="toc-text">2. 事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%81%93%E7%BC%96%E7%A8%8B%E9%A2%98%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">第一道编程题：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E9%81%93%E7%BC%96%E7%A8%8B%E9%A2%98"><span class="toc-number">1.4.</span> <span class="toc-text">第二道编程题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%85%B6%E5%AE%83"><span class="toc-number">2.</span> <span class="toc-text">三、其它</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        2017 阿里前端笔试题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lastnigtic</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-09-20T16:00:00.000Z" itemprop="datePublished">2017-09-21</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="一、选择题"><a href="#一、选择题" class="headerlink" title="一、选择题"></a>一、选择题</h2><h3 id="1-下列程序运行的结果"><a href="#1-下列程序运行的结果" class="headerlink" title="1. 下列程序运行的结果"></a>1. 下列程序运行的结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">let obj &#x3D; Object.create(&#123;name: &#39;King&#39;&#125;);</span><br><span class="line">    function foo(obj)&#123;</span><br><span class="line">        Object.setPrototypeOf(obj, null);</span><br><span class="line">        return obj;</span><br><span class="line">    &#125;</span><br><span class="line">    console.log(obj &#x3D;&#x3D;&#x3D; foo(obj)); &#x2F;&#x2F; true</span><br><span class="line"></span><br><span class="line">    let obj &#x3D; [1,2,3];</span><br><span class="line">    function foo(val)&#123;</span><br><span class="line">        val &#x3D; [1,2,3];</span><br><span class="line">        return val;</span><br><span class="line">    &#125;</span><br><span class="line">    console.log(obj &#x3D;&#x3D;&#x3D; foo(obj)); &#x2F;&#x2F; false</span><br><span class="line"></span><br><span class="line">    let obj &#x3D; 1;</span><br><span class="line">    function foo(val)&#123;</span><br><span class="line">        val +&#x3D; 1;</span><br><span class="line">        return val;</span><br><span class="line">    &#125;</span><br><span class="line">    console.log(obj &#x3D;&#x3D;&#x3D; foo(obj)); &#x2F;&#x2F; false</span><br><span class="line"></span><br><span class="line">    let obj &#x3D; &#123;bar: 1&#125;;</span><br><span class="line">    function foo(val)&#123;</span><br><span class="line">        val.bar +&#x3D; 1;</span><br><span class="line">        return val</span><br><span class="line">    &#125;</span><br><span class="line">    console.log(obj &#x3D;&#x3D;&#x3D; foo(obj)); &#x2F;&#x2F; true</span><br><span class="line"></span><br><span class="line">    let obj &#x3D; [1,2,3];</span><br><span class="line">    function foo(val)&#123;</span><br><span class="line">        const newVal &#x3D; val.map(num &#x3D;&gt; num * 2);</span><br><span class="line">        return newVal;</span><br><span class="line">    &#125;</span><br><span class="line">    console.log(obj &#x3D;&#x3D;&#x3D; foo(obj)); &#x2F;&#x2F; false</span><br><span class="line"></span><br><span class="line">    let obj &#x3D; [1,2,3];</span><br><span class="line">    function foo(val)&#123;</span><br><span class="line">        return val.sort();</span><br><span class="line">    &#125;</span><br><span class="line">    console.log(obj &#x3D;&#x3D;&#x3D; foo(obj)); &#x2F;&#x2F; true</span><br></pre></td></tr></table></figure>
+
+<p>这里主要考察的引用对象的引用地址是否相同</p>
+<h3 id="2-事件"><a href="#2-事件" class="headerlink" title="2. 事件"></a>2. 事件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;div id&#x3D;&quot;J_container&quot;&gt;</span><br><span class="line">        &lt;div id&#x3D;&quot;div2&quot;&gt;</span><br><span class="line">            &lt;div id&#x3D;&quot;div1&quot;&gt;点我&lt;&#x2F;div&gt;</span><br><span class="line">        &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">        &lt;script&gt;</span><br><span class="line">        var div1 &#x3D; document.getElementById(&#39;div1&#39;);</span><br><span class="line">        var div2 &#x3D; document.getElementById(&#39;div2&#39;);</span><br><span class="line">        div1.addEventListener(&#39;click&#39;, () &#x3D;&gt; &#123;console.log(&#39;a&#39;)&#125;, true);</span><br><span class="line">        div2.addEventListener(&#39;click&#39;, () &#x3D;&gt; &#123;console.log(&#39;b&#39;)&#125;);</span><br><span class="line">        div1.addEventListener(&#39;click&#39;, () &#x3D;&gt; &#123;console.log(&#39;c&#39;)&#125;, false);</span><br><span class="line">        div2.addEventListener(&#39;click&#39;, () &#x3D;&gt; &#123;console.log(&#39;d&#39;)&#125;, true);</span><br><span class="line">    &lt;&#x2F;script&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br></pre></td></tr></table></figure>
+
+<p>输出的顺序是： d a c b<br>addEventListener 的第三个参数，是表示事件冒泡还是捕获<br>点击 div1 之后，事件在 div2 和 div1 处被捕获，打印出 d, a，<br>之后事件开始向上冒泡，才出现了 c, b</p>
+<h3 id="第一道编程题："><a href="#第一道编程题：" class="headerlink" title="第一道编程题："></a>第一道编程题：</h3><p>要求：<br><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/ali-test/0.png" alt="0.png"><br>我的答案:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">function cycleDetector(obj)&#123;</span><br><span class="line">          let stack &#x3D; [];</span><br><span class="line">          let res &#x3D; false;</span><br><span class="line">          let _incircle &#x3D; function(item)&#123;</span><br><span class="line">              let len &#x3D; stack.length;</span><br><span class="line">              for( let y &#x3D; 0; y &lt; len; y++)&#123;</span><br><span class="line">                  if( item &#x3D;&#x3D;&#x3D; stack[y])&#123;</span><br><span class="line">                      return true;</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">              return false;</span><br><span class="line">          &#125;</span><br><span class="line">          let _read &#x3D; function(_obj)&#123;</span><br><span class="line">              for ( let pro in _obj )&#123;</span><br><span class="line">                  if( _obj[pro] instanceof Object )&#123;</span><br><span class="line">                      if ( !_incircle(_obj[pro]) )&#123;</span><br><span class="line">                          stack.push(_obj[pro]);</span><br><span class="line">                          _read(_obj[pro]);</span><br><span class="line">                      &#125;else&#123;</span><br><span class="line">                          res &#x3D; true;</span><br><span class="line">                      &#125;</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;;</span><br><span class="line">          _read(obj);</span><br><span class="line">          return res;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+
+<p>类似与数组去重的思想，遍历这个 obj，如果有存在，就证明存在环</p>
+<h3 id="第二道编程题"><a href="#第二道编程题" class="headerlink" title="第二道编程题"></a>第二道编程题</h3><p>要求：<br><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/ali-test/1.png" alt="1.png"><br>我的答案：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">　class EventEmitter &#123;</span><br><span class="line">    &#x2F;* 在此处填写实现 *&#x2F;</span><br><span class="line">    constructor()&#123;</span><br><span class="line">        this.eventlist &#x3D; &#123;&#125;;</span><br><span class="line">        this.onceEventlist &#x3D; &#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    fire(obj)&#123;</span><br><span class="line">        const &#123; type, value &#125; &#x3D; obj;</span><br><span class="line">        let _run &#x3D; 1;</span><br><span class="line">        let _find &#x3D; function(list)&#123;</span><br><span class="line">            for(let i in list)&#123;</span><br><span class="line">                if(i &#x3D;&#x3D;&#x3D; type)&#123;</span><br><span class="line">                    for(let j in list[i])&#123;</span><br><span class="line">                        list[i][j](value);</span><br><span class="line">                        if( _run )&#123;</span><br><span class="line">                            delete list[i];</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            _run &#x3D; 0;</span><br><span class="line">        &#125;;</span><br><span class="line">        _find(this.onceEventlist);</span><br><span class="line">        _find(this.eventlist);</span><br><span class="line">    &#125;</span><br><span class="line">    on(event, fn)&#123;</span><br><span class="line">        this.eventlist[event] &#x3D; &#123;&#125;;</span><br><span class="line">        this.eventlist[event][fn.name] &#x3D; fn;</span><br><span class="line">    &#125;</span><br><span class="line">    off(event, fn)&#123;</span><br><span class="line">        if(this.eventlist[event])&#123;</span><br><span class="line">            delete this.eventlist[event][fn.name];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    once(event, fn)&#123;</span><br><span class="line">        this.onceEventlist[event] &#x3D; &#123;&#125;;</span><br><span class="line">        this.onceEventlist[event][fn.name] &#x3D; fn;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const emitter &#x3D; new EventEmitter();</span><br><span class="line"></span><br><span class="line">const handler &#x3D; function(evt) &#123;</span><br><span class="line">    console.log(1, evt);</span><br><span class="line">&#125;;</span><br><span class="line">emitter.on(&#39;foo&#39;, handler);</span><br><span class="line"></span><br><span class="line">emitter.once(&#39;foo&#39;, function(evt) &#123;</span><br><span class="line">    console.log(2, evt);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">emitter.fire(&#123; type: &#39;foo&#39;, value: &#39;hello&#39; &#125;);</span><br><span class="line">emitter.fire(&#123; type: &#39;foo&#39;, value: &#39;world&#39; &#125;);</span><br><span class="line">emitter.off(&#39;foo&#39;, handler);</span><br><span class="line">emitter.fire(&#123; type: &#39;foo&#39;, value: &#39;test&#39; &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>一个简易的订阅发布者模式</p>
+<h2 id="三、其它"><a href="#三、其它" class="headerlink" title="三、其它"></a>三、其它</h2><p>一道模板解析习题<br><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/ali-test/3.png" alt="3.png"><br>通过正则解析来做：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">var template &#x3D; function(str) &#123;</span><br><span class="line">    var replace &#x3D; &#123;&#125;;</span><br><span class="line">    var result;</span><br><span class="line">    var newStr &#x3D; str;</span><br><span class="line">    var re &#x3D; new RegExp(&#39;\\&lt;\\%\\&#x3D;\\w+\\%\\&gt;&#39;,&#39;g&#39;);</span><br><span class="line">    while((result &#x3D; re.exec(str)) !&#x3D;&#x3D; null)&#123;</span><br><span class="line">        var _re &#x3D; new RegExp(&#39;\\w+&#39;,&#39;g&#39;);</span><br><span class="line">        var item &#x3D; result[0].match(_re)[0];</span><br><span class="line">        replace[item] &#x3D; &#123;&#125;;</span><br><span class="line">        replace[item].origin &#x3D; result[0];</span><br><span class="line">    &#125;</span><br><span class="line">    return function(obj) &#123;</span><br><span class="line">        for(var i in obj)&#123;</span><br><span class="line">            if(replace[i])&#123;</span><br><span class="line">                str &#x3D; str.replace(replace[i].origin, obj[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return str;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%80%89%E6%8B%A9%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">一、选择题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%8B%E5%88%97%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E7%9A%84%E7%BB%93%E6%9E%9C"><span class="toc-number">1.1.</span> <span class="toc-text">1. 下列程序运行的结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.2.</span> <span class="toc-text">2. 事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%81%93%E7%BC%96%E7%A8%8B%E9%A2%98%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">第一道编程题：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E9%81%93%E7%BC%96%E7%A8%8B%E9%A2%98"><span class="toc-number">1.4.</span> <span class="toc-text">第二道编程题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%85%B6%E5%AE%83"><span class="toc-number">2.</span> <span class="toc-text">三、其它</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2017/09/21/ali-test/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2017/09/21/ali-test/&text=2017 阿里前端笔试题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2017/09/21/ali-test/&title=2017 阿里前端笔试题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2017/09/21/ali-test/&is_video=false&description=2017 阿里前端笔试题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=2017 阿里前端笔试题&body=Check out this article: http://example.com/2017/09/21/ali-test/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2017/09/21/ali-test/&title=2017 阿里前端笔试题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2017/09/21/ali-test/&title=2017 阿里前端笔试题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2017/09/21/ali-test/&title=2017 阿里前端笔试题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2017/09/21/ali-test/&title=2017 阿里前端笔试题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2017/09/21/ali-test/&name=2017 阿里前端笔试题&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2017/09/21/ali-test/&t=2017 阿里前端笔试题"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    lastnigtic
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

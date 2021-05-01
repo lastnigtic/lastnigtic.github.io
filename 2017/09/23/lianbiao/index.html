@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="一、定义链表是由一组节点组成的集合。每个节点都使用一个对象的引用指向它的后继。指向另一个节点的引用叫做链。 二、操作插入： 链表中插入一个节点的效率很高。向链表中插入一个节点，需要修改它前面的节点（前驱），使其指向新加入的节点，而新加入的节点则指向原来前驱指向的节点。删除： 从链表中删除一个元素也很简单。将待删除元素的前驱节点指向待删除元素的后继节点，同时将待删除元素指向 null，元素就删除成功">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javascript实现链表基本操作">
+<meta property="og:url" content="http://example.com/2017/09/23/lianbiao/index.html">
+<meta property="og:site_name" content="Blog of lastnigtic">
+<meta property="og:description" content="一、定义链表是由一组节点组成的集合。每个节点都使用一个对象的引用指向它的后继。指向另一个节点的引用叫做链。 二、操作插入： 链表中插入一个节点的效率很高。向链表中插入一个节点，需要修改它前面的节点（前驱），使其指向新加入的节点，而新加入的节点则指向原来前驱指向的节点。删除： 从链表中删除一个元素也很简单。将待删除元素的前驱节点指向待删除元素的后继节点，同时将待删除元素指向 null，元素就删除成功">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/LinkList/0.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/LinkList/1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/LinkList/2.png">
+<meta property="article:published_time" content="2017-09-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-05-01T15:41:28.095Z">
+<meta property="article:author" content="lastnigtic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/LinkList/0.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>javascript实现链表基本操作</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2017/09/23/heapSort/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2017/09/21/ali-test/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2017/09/23/lianbiao/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2017/09/23/lianbiao/&text=javascript实现链表基本操作"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2017/09/23/lianbiao/&title=javascript实现链表基本操作"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2017/09/23/lianbiao/&is_video=false&description=javascript实现链表基本操作"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=javascript实现链表基本操作&body=Check out this article: http://example.com/2017/09/23/lianbiao/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2017/09/23/lianbiao/&title=javascript实现链表基本操作"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2017/09/23/lianbiao/&title=javascript实现链表基本操作"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2017/09/23/lianbiao/&title=javascript实现链表基本操作"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2017/09/23/lianbiao/&title=javascript实现链表基本操作"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2017/09/23/lianbiao/&name=javascript实现链表基本操作&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2017/09/23/lianbiao/&t=javascript实现链表基本操作"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">一、定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">二、操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%A8%A1%E6%8B%9F"><span class="toc-number">3.</span> <span class="toc-text">三、模拟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E9%93%BE%E8%A1%A8"><span class="toc-number">3.1.</span> <span class="toc-text">单链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8"><span class="toc-number">3.2.</span> <span class="toc-text">双向链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E5%88%97%E8%A1%A8"><span class="toc-number">3.3.</span> <span class="toc-text">循环列表</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        javascript实现链表基本操作
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lastnigtic</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-09-22T16:00:00.000Z" itemprop="datePublished">2017-09-23</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="一、定义"><a href="#一、定义" class="headerlink" title="一、定义"></a>一、定义</h2><p>链表是由一组节点组成的集合。每个节点都使用一个对象的引用指向它的后继。指向另一<br>个节点的引用叫做链。</p>
+<h2 id="二、操作"><a href="#二、操作" class="headerlink" title="二、操作"></a>二、操作</h2><p><em>插入：</em> 链表中插入一个节点的效率很高。向链表中插入一个节点，需要修改它前面的节点（前<br>驱），使其指向新加入的节点，而新加入的节点则指向原来前驱指向的节点。<br><em>删除：</em> 从链表中删除一个元素也很简单。将待删除元素的前驱节点指向待删除元素的后继节点，同时将待删除元素指向 null，元素就删除成功了。</p>
+<h2 id="三、模拟"><a href="#三、模拟" class="headerlink" title="三、模拟"></a>三、模拟</h2><p>我们用 object 来模拟一下链表</p>
+<h3 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h3><ul>
+<li>定义节点结构</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 定义每一个节点的结构</span><br><span class="line">function Node(el) &#123;</span><br><span class="line">    this.el &#x3D; el;</span><br><span class="line">    this.next &#x3D; null; &#x2F;&#x2F; 后继节点</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>然后我们写个创建链表的方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function List()&#123;</span><br><span class="line">    this.head &#x3D; new Node(&#39;head&#39;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>插入节点<ul>
+<li>插入节点之前我们要先找到节点，找到之后我们改变模拟指针的指向就能够实现元素的插入</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 找到插入位置，不存在返回null</span><br><span class="line">function find(item)&#123;</span><br><span class="line">    var currNode &#x3D; this.head;</span><br><span class="line">    while(currNode &amp;&amp; currNode.el !&#x3D; item)&#123;</span><br><span class="line">        currNode &#x3D; currNode.next</span><br><span class="line">    &#125;</span><br><span class="line">    return currNode</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F; 插入操作</span><br><span class="line">function insert(newEl, item)&#123;</span><br><span class="line">    var newNode &#x3D; new Node(newEl);</span><br><span class="line">    var currNode &#x3D; this.find(item);</span><br><span class="line">    &#x2F;&#x2F; 找到要插入的前一个节点，如果存在，改变指针指向</span><br><span class="line">    if(currNode)&#123;</span><br><span class="line">        newNode.next &#x3D; currNode.next; &#x2F;&#x2F; 改变next指向</span><br><span class="line">        &#x2F;&#x2F; newNode.previous &#x3D; currNode; &#x2F;&#x2F; 改变previous指向</span><br><span class="line">        currNode.next &#x3D; newNode;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>模拟一个删除节点的方法<ul>
+<li>删除节点不同于插入节点，我们不是要找到删除的节点的位置，而是要找到要删除的节点的前一个位置</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 找到所需删除节点的前一个位置</span><br><span class="line">function findPrev(item)&#123;</span><br><span class="line">    var prevNode &#x3D; this.head;</span><br><span class="line">    while(prevNode &amp;&amp; prevNode.next.el !&#x3D;&#x3D; item)&#123;</span><br><span class="line">        prevNode &#x3D; prevNode.next</span><br><span class="line">    &#125;</span><br><span class="line">    return prevNode;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F; 改变指针指向，移除节点</span><br><span class="line">function remove(el)&#123;</span><br><span class="line">    var prevNode &#x3D; this.findPrev(el);</span><br><span class="line">    var reNode;</span><br><span class="line">    if(prevNode)&#123;</span><br><span class="line">        reNode &#x3D; prevNode.next;</span><br><span class="line">        prevNode.next &#x3D; prevNode.next.next;</span><br><span class="line">    &#125;</span><br><span class="line">    return reNode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>再写一个展示当前链表结构的方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 展示链表</span><br><span class="line">function display() &#123;</span><br><span class="line">    var currNode &#x3D; this.head;</span><br><span class="line">    var str &#x3D; currNode.el + &#39;-&gt;&#39;;</span><br><span class="line">    while(!(currNode.next &#x3D;&#x3D; null))&#123;</span><br><span class="line">        str +&#x3D; currNode.next.el + &#39;-&gt;&#39;;</span><br><span class="line">        currNode &#x3D; currNode.next;</span><br><span class="line">    &#125;</span><br><span class="line">    console.log(str.substring(0,str.length-2));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>记得所有的方法都要在我们的链表上注册</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 链表</span><br><span class="line">function List()&#123;</span><br><span class="line">    this.head &#x3D; new Node(&#39;head&#39;);</span><br><span class="line">    this.find &#x3D; find;</span><br><span class="line">    this.insert &#x3D; insert;</span><br><span class="line">    this.findPrev &#x3D; findPrev</span><br><span class="line">    this.remove &#x3D; remove;</span><br><span class="line">    this.display &#x3D; display;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试一下当前写的方法是否有效</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var list &#x3D; new List();</span><br><span class="line">list.insert(&#39;Mike&#39;, &#39;head&#39;);</span><br><span class="line">list.insert(&#39;Sarah&#39;, &#39;Mike&#39;);</span><br><span class="line">list.insert(&#39;Jhon&#39;, &#39;Sarah&#39;);</span><br><span class="line">console.log(&#39;原链表结构：&#39;)</span><br><span class="line">list.display();</span><br><span class="line">list.remove(&#39;Sarah&#39;);</span><br><span class="line">console.log(&#39;删除Sarah节点&#39;)</span><br><span class="line">list.display();</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/LinkList/0.png" alt="0.png"></p>
+<ul>
+<li>！！！单链表反转<ul>
+<li>小米一面的时候，面试官（好人）给了这么一道基础题，我却写不出来。现在用 js 来重现一下我的思路</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 寻找最后一个节点</span><br><span class="line">function findLast()&#123;</span><br><span class="line">    var currNode &#x3D; this.head;</span><br><span class="line">    while(!(currNode.next &#x3D;&#x3D;&#x3D; null)) &#123;</span><br><span class="line">        currNode &#x3D; currNode.next;</span><br><span class="line">    &#125;</span><br><span class="line">    return currNode;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 单链表反转</span><br><span class="line">function listReverse()&#123;</span><br><span class="line">    var firstEl &#x3D; this.head.next.el;</span><br><span class="line">    &#x2F;&#x2F; 初始化数据</span><br><span class="line">    var prevNode &#x3D; this.head;</span><br><span class="line">    var lastOne &#x3D; this.findLast();</span><br><span class="line">    var lastTwo &#x3D; this.findPrev(lastOne.el);</span><br><span class="line">    while(lastOne.el !&#x3D; firstEl)&#123;</span><br><span class="line">        &#x2F;&#x2F; 把原本倒数第二位的next和倒数第一位的next</span><br><span class="line">        lastTwo.next &#x3D; lastOne.next</span><br><span class="line">        &#x2F;&#x2F; 最后一位和插入位next指针改变</span><br><span class="line">        lastOne.next &#x3D; prevNode.next;</span><br><span class="line">        prevNode.next &#x3D; lastOne;</span><br><span class="line">        &#x2F;&#x2F; 刷新数据</span><br><span class="line">        prevNode &#x3D; lastOne;</span><br><span class="line">        lastOne &#x3D; this.findLast();</span><br><span class="line">        lastTwo &#x3D; this.findPrev(lastOne.el);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var list &#x3D; new List();</span><br><span class="line">list.insert(&#39;Mike&#39;, &#39;head&#39;);</span><br><span class="line">list.insert(&#39;Sarah&#39;, &#39;Mike&#39;);</span><br><span class="line">list.insert(&#39;Jhon&#39;, &#39;Sarah&#39;);</span><br><span class="line">console.log(&#39;原链表结构：&#39;)</span><br><span class="line">list.display();</span><br><span class="line">list.listReverse();</span><br><span class="line">console.log(&#39;反转列表输出：&#39;)</span><br><span class="line">list.display();</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/LinkList/1.png" alt="1.png"></p>
+<h3 id="双向链表"><a href="#双向链表" class="headerlink" title="双向链表"></a>双向链表</h3><ul>
+<li>通过给 Node 对象增加一个属性，该属性存储指向前驱节点的链接，这样删除节点就变容易了，但插入节点就要注意前驱指针的指向</li>
+<li>新的节点结构</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 双向链表节点</span><br><span class="line">function Node(el) &#123;</span><br><span class="line">    this.el &#x3D; el;</span><br><span class="line">    this.next &#x3D; null; &#x2F;&#x2F; 后继节点</span><br><span class="line">    this.previous &#x3D; null; &#x2F;&#x2F; 前驱节点</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>新的插入节点的方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 插入操作</span><br><span class="line">function insert(newEl, item)&#123;</span><br><span class="line">    var newNode &#x3D; new Node(newEl);</span><br><span class="line">    var currNode &#x3D; this.find(item);</span><br><span class="line">    &#x2F;&#x2F; 找到要插入的前一个节点，如果存在，改变指针指向</span><br><span class="line">    if(currNode)&#123;</span><br><span class="line">        newNode.next &#x3D; currNode.next; &#x2F;&#x2F; 改变next指向</span><br><span class="line">        newNode.previous &#x3D; currNode;    &#x2F;&#x2F; 改变previous指向</span><br><span class="line">        currNode.next &#x3D; newNode;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>新的删除方法（不需要去找前一个节点）</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function remove(item)&#123;</span><br><span class="line">    var currNode &#x3D; this.find(item);;</span><br><span class="line">    if(!(currNode.next &#x3D;&#x3D;&#x3D; null)) &#123;</span><br><span class="line">        currNode.previous.next &#x3D; currNode.next;</span><br><span class="line">        currNode.next.previous &#x3D; currNode.previous; &#x2F;&#x2F; 改变前后指针方向</span><br><span class="line">        currNode.next &#x3D; null;</span><br><span class="line">        currNode.previous &#x3D; null; &#x2F;&#x2F; 释放</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>再写一个双链表反序输出的方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 找到最后一个元素</span><br><span class="line">function findLast()&#123;</span><br><span class="line">    var currNode &#x3D; this.head;</span><br><span class="line">    while(!(currNode.next &#x3D;&#x3D;&#x3D; null)) &#123;</span><br><span class="line">        currNode &#x3D; currNode.next;</span><br><span class="line">    &#125;</span><br><span class="line">    return currNode;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F; 利用前驱节点直至head</span><br><span class="line">function dispReverse() &#123;</span><br><span class="line">    var currNode &#x3D; this.findLast();</span><br><span class="line">    var str &#x3D; currNode.el + &#39;-&gt;&#39;;</span><br><span class="line">    while(!(currNode.previous &#x3D;&#x3D; null))&#123;</span><br><span class="line">        currNode &#x3D; currNode.previous;</span><br><span class="line">        str +&#x3D; currNode.el + &#39;-&gt;&#39;;</span><br><span class="line">    &#125;</span><br><span class="line">    console.log(str.substring(0, str.length-2));</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>注册方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function List()&#123;</span><br><span class="line">    this.head &#x3D; new Node(&#39;head&#39;);</span><br><span class="line">    this.find &#x3D; find;</span><br><span class="line">    this.insert &#x3D; insert;</span><br><span class="line">    this.remove &#x3D; remove;</span><br><span class="line">    this.findLast &#x3D; findLast;</span><br><span class="line">    this.dispReverse &#x3D; dispReverse;</span><br><span class="line">    this.display &#x3D; display;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试一下所有方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">var list &#x3D; new List();</span><br><span class="line">list.insert(&#39;Mike&#39;, &#39;head&#39;);</span><br><span class="line">list.insert(&#39;Sarah&#39;, &#39;Mike&#39;);</span><br><span class="line">list.insert(&#39;Jhon&#39;, &#39;Sarah&#39;);</span><br><span class="line">console.log(&#39;原链表结构：&#39;);</span><br><span class="line">list.display();</span><br><span class="line">console.log(&#39;反序输出&#39;)</span><br><span class="line">list.dbReverse();</span><br><span class="line">console.log(&#39;反转列表输出：&#39;);</span><br><span class="line">list.dbReverse();</span><br><span class="line">list.display();</span><br><span class="line">console.log(&#39;删除节点Sarah：&#39;)</span><br><span class="line">list.remove(&#39;Sarah&#39;);</span><br><span class="line">list.display();</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/LinkList/2.png" alt="2.png"></p>
+<h3 id="循环列表"><a href="#循环列表" class="headerlink" title="循环列表"></a>循环列表</h3><ul>
+<li>循环链表即最后一个节点指向 head 的链表结构，可以在初始化的时候把 head 的 next 指向自身就行了，这里就不再做演示了。</li>
+</ul>
+<blockquote>
+<p>这样就很粗浅的复习了一下链表的知识 ，做个记录</p>
+</blockquote>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">一、定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">二、操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%A8%A1%E6%8B%9F"><span class="toc-number">3.</span> <span class="toc-text">三、模拟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E9%93%BE%E8%A1%A8"><span class="toc-number">3.1.</span> <span class="toc-text">单链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8"><span class="toc-number">3.2.</span> <span class="toc-text">双向链表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E5%88%97%E8%A1%A8"><span class="toc-number">3.3.</span> <span class="toc-text">循环列表</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2017/09/23/lianbiao/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2017/09/23/lianbiao/&text=javascript实现链表基本操作"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2017/09/23/lianbiao/&title=javascript实现链表基本操作"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2017/09/23/lianbiao/&is_video=false&description=javascript实现链表基本操作"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=javascript实现链表基本操作&body=Check out this article: http://example.com/2017/09/23/lianbiao/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2017/09/23/lianbiao/&title=javascript实现链表基本操作"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2017/09/23/lianbiao/&title=javascript实现链表基本操作"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2017/09/23/lianbiao/&title=javascript实现链表基本操作"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2017/09/23/lianbiao/&title=javascript实现链表基本操作"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2017/09/23/lianbiao/&name=javascript实现链表基本操作&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2017/09/23/lianbiao/&t=javascript实现链表基本操作"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    lastnigtic
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

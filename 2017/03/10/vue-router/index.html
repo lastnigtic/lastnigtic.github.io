@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="首先我们用 vue-cli 搭建一个 vue 开发的脚手架，删除它的原来的代码，开始写自己的代码，实现最简单的 router 功能： 一，开始新建几个自己需要的页面,随便写点东西： 1234567891011&lt;template&gt;&lt;div id &#x3D; &quot;movie&quot;&gt;    I&#39;m moive!&lt;&#x2F;div&gt;&lt;&amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue2.0 vue-router探索">
+<meta property="og:url" content="http://example.com/2017/03/10/vue-router/index.html">
+<meta property="og:site_name" content="Blog of lastnigtic">
+<meta property="og:description" content="首先我们用 vue-cli 搭建一个 vue 开发的脚手架，删除它的原来的代码，开始写自己的代码，实现最简单的 router 功能： 一，开始新建几个自己需要的页面,随便写点东西： 1234567891011&lt;template&gt;&lt;div id &#x3D; &quot;movie&quot;&gt;    I&#39;m moive!&lt;&#x2F;div&gt;&lt;&amp;#">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-router/0.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-router/1.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-router/2.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-router/3.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-router/4.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-router/5.gif">
+<meta property="article:published_time" content="2017-03-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-05-01T15:42:55.145Z">
+<meta property="article:author" content="lastnigtic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-router/0.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Vue2.0 vue-router探索</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/2017/03/10/micro-canvas-clock/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/2017/03/10/vue-transition/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2017/03/10/vue-router/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2017/03/10/vue-router/&text=Vue2.0 vue-router探索"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2017/03/10/vue-router/&title=Vue2.0 vue-router探索"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2017/03/10/vue-router/&is_video=false&description=Vue2.0 vue-router探索"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Vue2.0 vue-router探索&body=Check out this article: http://example.com/2017/03/10/vue-router/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2017/03/10/vue-router/&title=Vue2.0 vue-router探索"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2017/03/10/vue-router/&title=Vue2.0 vue-router探索"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2017/03/10/vue-router/&title=Vue2.0 vue-router探索"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2017/03/10/vue-router/&title=Vue2.0 vue-router探索"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2017/03/10/vue-router/&name=Vue2.0 vue-router探索&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2017/03/10/vue-router/&t=Vue2.0 vue-router探索"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Vue2.0 vue-router探索
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lastnigtic</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-03-09T16:00:00.000Z" itemprop="datePublished">2017-03-10</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>首先我们用 vue-cli 搭建一个 vue 开发的脚手架，删除它的原来的代码，开始写自己的代码，实现最简单的 router 功能：</p>
+<p><strong><font color=#ff0000>一，开始</font></strong><br>新建几个自己需要的页面,随便写点东西：<br><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-router/0.png" alt="start.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">&lt;div id &#x3D; &quot;movie&quot;&gt;</span><br><span class="line">    I&#39;m moive!</span><br><span class="line">&lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;&#125;;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line">&lt;style&gt;</span><br><span class="line"></span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>看入口文件 main.js,可以看到:<code>import router from &#39;./router&#39;;</code><br>router 从 router 这个文件夹引入，我们打开 router 这个文件夹下的 index.js，在这里配置路由:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import Vue from &#39;vue&#39;;</span><br><span class="line">import Router from &#39;vue-router&#39;;</span><br><span class="line">import post from &#39;..&#x2F;components&#x2F;post&#x2F;post&#39;;</span><br><span class="line">import movie from &#39;..&#x2F;components&#x2F;movie&#x2F;movie&#39;;</span><br><span class="line">import music from &#39;..&#x2F;components&#x2F;music&#x2F;music&#39;;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 记住用之前要先注册</span><br><span class="line">Vue.use(Router);</span><br><span class="line"></span><br><span class="line">export default new Router(&#123;</span><br><span class="line">  routes: [</span><br><span class="line">    &#123; path: &#39;&#x2F;post&#39;, component: post &#125;,</span><br><span class="line">    &#123; path: &#39;&#x2F;movie&#39;, component: movie &#125;,</span><br><span class="line">    &#123; path: &#39;&#x2F;music&#39;, component: music &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>再来写我们的 app.vue 文件（to 和 path 是一一对应的）:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id&#x3D;&quot;container&quot;&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;header&quot;&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;tab-item&quot;&gt;</span><br><span class="line">        &lt;router-link to&#x3D;&quot;&#x2F;post&quot;&gt;日志&lt;&#x2F;router-link&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;tab-item&quot;&gt;</span><br><span class="line">        &lt;router-link to&#x3D;&quot;&#x2F;movie&quot;&gt;电影&lt;&#x2F;router-link&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;tab-item&quot;&gt;</span><br><span class="line">        &lt;router-link to&#x3D;&quot;&#x2F;music&quot;&gt;音乐&lt;&#x2F;router-link&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;router-view&gt;&lt;&#x2F;router-view&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>记住我们的这个模板文件是挂载在 id=app 的 div 中的，所以在 index.html 中要有<div id="app"><app></app></div>,</p>
+<p>然后保存，就可以看到：<br><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-router/1.gif" alt="start.png"></p>
+<p><strong><font color=#ff0000>二、动态路由匹配</font></strong><br>修改 router/index.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Vue.use(Router);</span><br><span class="line"></span><br><span class="line">export default new Router(&#123;</span><br><span class="line">  routes: [</span><br><span class="line">    &#123; path: &#39;&#x2F;user&#x2F;:id&#39;, component: post &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>修改 app.vue</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id&#x3D;&quot;container&quot;&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;header&quot;&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;tab-item&quot;&gt;</span><br><span class="line">        &lt;router-link to&#x3D;&quot;&#x2F;user&#x2F;post&quot;&gt;日志&lt;&#x2F;router-link&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;tab-item&quot;&gt;</span><br><span class="line">        &lt;router-link to&#x3D;&quot;&#x2F;user&#x2F;movie&quot;&gt;电影&lt;&#x2F;router-link&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;tab-item&quot;&gt;</span><br><span class="line">        &lt;router-link to&#x3D;&quot;&#x2F;user&#x2F;music&quot;&gt;音乐&lt;&#x2F;router-link&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;router-view&gt;&lt;&#x2F;router-view&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>修改 post.vue</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div id &#x3D; &quot;post&quot;&gt;</span><br><span class="line">        I&#39;m &#123;&#123; $route.params.id &#125;&#125;!</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;&#125;;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>看下效果:<br><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-router/2.gif" alt="start.png"><br>虽然效果一样，但这其实是 post 一个模板的三次复用，至于$route.params.id，可以参考文档：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://router.vuejs.org/zh-cn/api/route-object.html">http://router.vuejs.org/zh-cn/api/route-object.html</a></p>
+</blockquote>
+<p><strong><font color=#ff0000>三、嵌套路由</font></strong><br>首先先改写 app.vue</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> &lt;template&gt;</span><br><span class="line">  &lt;div id&#x3D;&quot;container&quot;&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;header&quot;&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;tab-item&quot;&gt;</span><br><span class="line">        &lt;router-link to&#x3D;&quot;&#x2F;user&quot;&gt;日志&lt;&#x2F;router-link&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">      &lt;router-view&gt;&lt;&#x2F;router-view&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>再改写 post.vue</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div id &#x3D; &quot;post&quot;&gt;</span><br><span class="line">         &lt;router-link to&#x3D;&quot;&#x2F;user&#x2F;music&quot;&gt;音乐&lt;&#x2F;router-link&gt;</span><br><span class="line">         &lt;router-link to&#x3D;&quot;&#x2F;user&#x2F;movie&quot;&gt;电影&lt;&#x2F;router-link&gt;</span><br><span class="line">      &lt;router-view&gt;&lt;&#x2F;router-view&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>再把 movie.vue 和 music.vue,改写成如下形式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">&lt;div id &#x3D; &quot;movie&quot;&gt;</span><br><span class="line">    I&#39;m Movie!</span><br><span class="line">&lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>最后改 router/index.js:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Vue.use(Router);</span><br><span class="line"></span><br><span class="line">export default new Router(&#123;</span><br><span class="line">  routes: [</span><br><span class="line">    &#123;</span><br><span class="line">      path: &#39;&#x2F;user&#39;,</span><br><span class="line">      component: post,</span><br><span class="line">      children: [</span><br><span class="line">        &#123;</span><br><span class="line">          path: &#39;&#x2F;user&#x2F;movie&#39;,</span><br><span class="line">          component: movie</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          path: &#39;&#x2F;user&#x2F;music&#39;,</span><br><span class="line">          component: music</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>看结果，这就实现了最简单的嵌套路由：<br><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-router/3.gif" alt="start.png"></p>
+<p><strong><font color=#ff0000>四、router.push()</font></strong><br>其实你在点击 router-link 时执行的就是 router.push()的方法，我们可以单独给它一个点击事件，同样可以实现跳转<br><em>post.vue</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div id &#x3D; &quot;post&quot;&gt;</span><br><span class="line">         &lt;router-link to&#x3D;&quot;&#x2F;user&#x2F;foo&#x2F;music&quot;&gt;音乐&lt;&#x2F;router-link&gt;</span><br><span class="line">         &lt;router-link to&#x3D;&quot;&#x2F;user&#x2F;foo&#x2F;movie&quot;&gt;电影&lt;&#x2F;router-link&gt;</span><br><span class="line">         &lt;div class &#x3D; &quot;button&quot;&gt;</span><br><span class="line">         &lt;button @click&#x3D;&quot;goMusic&quot;&gt;音乐&lt;&#x2F;button&gt;</span><br><span class="line">         &lt;button @click&#x3D;&quot;goMovie&quot;&gt;电影&lt;&#x2F;button&gt;</span><br><span class="line">         &lt;&#x2F;div&gt;</span><br><span class="line">      &lt;router-view&gt;&lt;&#x2F;router-view&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  methods: &#123;</span><br><span class="line">    goMusic()&#123;</span><br><span class="line">        this.$router.push(&#39;&#x2F;user&#x2F;foo&#x2F;music&#39;);</span><br><span class="line">    &#125;,</span><br><span class="line">    goMovie()&#123;</span><br><span class="line">        this.$router.push(&#39;&#x2F;user&#x2F;foo&#x2F;movie&#39;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>看结果和直接点击是一样的：<br><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-router/4.gif" alt="start.png"></p>
+<p><strong><font color=#ff0000>五、路由的命名和参数传递</font></strong><br>路由的命名实际上就是给路由绑定一个那么的属性，通过 name 的值来跳转；而参数的传递则可以在页面进行绑定，下面做一个最简单的例子</p>
+<p>先把 app.vue 修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id&#x3D;&quot;container&quot;&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;header&quot;&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;tab-item&quot;&gt;</span><br><span class="line">        &#x2F;&#x2F; 注意：，这里需要绑定</span><br><span class="line">        &lt;router-link :to&#x3D;&quot;&#123; name: &#39;post&#39; &#125;&quot;&gt;日志&lt;&#x2F;router-link&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;tab-item&quot;&gt;</span><br><span class="line">        &lt;router-link :to&#x3D;&quot;&#123; name: &#39;movie&#39; &#125;&quot;&gt;电影&lt;&#x2F;router-link&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">      &lt;div class&#x3D;&quot;tab-item&quot;&gt;</span><br><span class="line">         &#x2F;&#x2F;传递两个自定义参数</span><br><span class="line">        &lt;router-link :to&#x3D;&quot;&#123; name: &#39;music&#39;, params: &#123; id: 123, dataId:456&#125; &#125;&quot;&gt;音乐&lt;&#x2F;router-link&gt;</span><br><span class="line">      &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">      &lt;router-view&gt;&lt;&#x2F;router-view&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在修改接收参数的 music.vue:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div id&#x3D;&quot;music&quot;&gt;</span><br><span class="line">        I&#39;m Music!</span><br><span class="line">        &#x2F;&#x2F; 可以直接接收</span><br><span class="line">        &lt;span&gt;传递参数id: &#123;&#123;$route.params.id &#125;&#125;&lt;&#x2F;span&gt;</span><br><span class="line">        &lt;button @click&#x3D;&quot;showData&quot;&gt;调用参数&lt;&#x2F;button&gt;</span><br><span class="line">        &lt;span&gt;接收参数：&#123;&#123;dataId&#125;&#125;&lt;&#x2F;span&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    export default &#123;</span><br><span class="line">        data() &#123;</span><br><span class="line">            return &#123;</span><br><span class="line">                dataId: &#39;&#39;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        methods: &#123;</span><br><span class="line">         &#x2F;&#x2F; 也可以在这里接收后，赋值</span><br><span class="line">            showData() &#123;</span><br><span class="line">                let dataId &#x3D; this.$route.params.dataId;</span><br><span class="line">                this.dataId &#x3D; dataId;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>最后看一下结果：<br><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-router/5.gif" alt="start.png"></p>
+<p><strong>这样，我们就对 vue-router 进行了一个最简单的了解，以及最简单的应用</strong></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2017/03/10/vue-router/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2017/03/10/vue-router/&text=Vue2.0 vue-router探索"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2017/03/10/vue-router/&title=Vue2.0 vue-router探索"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2017/03/10/vue-router/&is_video=false&description=Vue2.0 vue-router探索"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Vue2.0 vue-router探索&body=Check out this article: http://example.com/2017/03/10/vue-router/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2017/03/10/vue-router/&title=Vue2.0 vue-router探索"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2017/03/10/vue-router/&title=Vue2.0 vue-router探索"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2017/03/10/vue-router/&title=Vue2.0 vue-router探索"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2017/03/10/vue-router/&title=Vue2.0 vue-router探索"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2017/03/10/vue-router/&name=Vue2.0 vue-router探索&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2017/03/10/vue-router/&t=Vue2.0 vue-router探索"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2021
+    lastnigtic
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
