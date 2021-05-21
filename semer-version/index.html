@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="部分翻译自https:&#x2F;&#x2F;github.com&#x2F;npm&#x2F;node-semver背景在做项目时，使用的 A 包依赖 B 包版本号 0.0.*，在 C 项目中使用^指定 B 包的依赖版本号，同时引入 A 包，但一直不能被 npm 正确扁平化，特此搞清楚 npm 中包范围的真正含义  结论^ 一般来说代表的是不包含最左边非零版本号的修改 ~ 则要看次版本号是否被指定，次版本号被指定则只包含修订版号的修">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？">
+<meta property="og:url" content="http://lastnigtic.cn/semer-version/index.html">
+<meta property="og:site_name" content="Blog of lastnigtic">
+<meta property="og:description" content="部分翻译自https:&#x2F;&#x2F;github.com&#x2F;npm&#x2F;node-semver背景在做项目时，使用的 A 包依赖 B 包版本号 0.0.*，在 C 项目中使用^指定 B 包的依赖版本号，同时引入 A 包，但一直不能被 npm 正确扁平化，特此搞清楚 npm 中包范围的真正含义  结论^ 一般来说代表的是不包含最左边非零版本号的修改 ~ 则要看次版本号是否被指定，次版本号被指定则只包含修订版号的修">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-05-05T09:23:57.473Z">
+<meta property="article:author" content="lastnigtic">
+<meta property="article:tag" content="lastnigtic">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/input-caret/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/async/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/semer-version/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/semer-version/&text=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/semer-version/&title=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/semer-version/&is_video=false&description=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？&body=Check out this article: http://lastnigtic.cn/semer-version/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/semer-version/&title=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/semer-version/&title=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/semer-version/&title=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/semer-version/&title=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/semer-version/&name=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/semer-version/&t=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">1.</span> <span class="toc-text">结论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%AD%E4%B9%89%E5%8C%96%E7%89%88%E6%9C%AC%E5%8F%B7%EF%BC%88semver-version%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">语义化版本号（semver version）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%8C%83%E5%9B%B4%EF%BC%88Ranges%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">范围（Ranges）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E5%8F%B7%E7%9A%84%E8%8C%83%E5%9B%B4%E7%94%B1%E4%B8%80%E7%BB%84%E6%AF%94%E8%BE%83%E5%99%A8%E5%86%B3%E5%AE%9A"><span class="toc-number">4.</span> <span class="toc-text">版本号的范围由一组比较器决定</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hyphen-Ranges-%E2%80%8BX-Y-Z-A-B-C%E2%80%8B"><span class="toc-number">4.1.</span> <span class="toc-text">Hyphen Ranges ​X.Y.Z - A.B.C​</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#X-Ranges-%E2%80%8B1-2-x%E2%80%8B-%E2%80%8B1-X%E2%80%8B-%E2%80%8B1-2-%E2%80%8B-%E2%80%8B%E2%80%8B"><span class="toc-number">4.2.</span> <span class="toc-text">X-Ranges ​1.2.x​ ​1.X​ ​1.2.​ ​​</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tilde-Ranges-%E2%80%8B1-2-3%E2%80%8B-%E2%80%8B1-2%E2%80%8B-%E2%80%8B-1%E2%80%8B"><span class="toc-number">4.3.</span> <span class="toc-text">Tilde Ranges ​1.2.3​ ​1.2​ ​~1​</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Caret-Ranges-%E2%80%8B-1-2-3%E2%80%8B-%E2%80%8B-0-2-5%E2%80%8B-%E2%80%8B-0-0-4%E2%80%8B"><span class="toc-number">4.4.</span> <span class="toc-text">Caret Ranges ​^1.2.3​ ​^0.2.5​ ​^0.0.4​</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lastnigtic</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-03-09T16:00:00.000Z" itemprop="datePublished">2020-03-10</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <blockquote>
+<p>部分翻译自<a target="_blank" rel="noopener" href="https://github.com/npm/node-semver">https://github.com/npm/node-semver</a><br>背景<br>在做项目时，使用的 A 包依赖 B 包版本号 0.0.*，在 C 项目中使用^指定 B 包的依赖版本号，同时引入 A 包，但一直不能被 npm 正确扁平化，特此搞清楚 npm 中包范围的真正含义</p>
+</blockquote>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>^ 一般来说代表的是不包含最左边非零版本号的修改</p>
+<p>~ 则要看次版本号是否被指定，次版本号被指定则只包含修订版号的修改</p>
+<h1 id="语义化版本号（semver-version）"><a href="#语义化版本号（semver-version）" class="headerlink" title="语义化版本号（semver version）"></a>语义化版本号（semver version）</h1><p>NPM 的版本号采用的 3 元组控制</p>
+<ol>
+<li>主版本号(major)：当你做了不兼容的 API 修改，</li>
+<li>次版本号(minor)：当你做了向下兼容的功能性新增，</li>
+<li>修订号(patch)：当你做了向下兼容的问题修正。<br>先行版本号(prerelease)及版本编译元数据可以加到“主版本号.次版本号.修订号”的后面，作为延伸。</li>
+</ol>
+<h1 id="范围（Ranges）"><a href="#范围（Ranges）" class="headerlink" title="范围（Ranges）"></a>范围（Ranges）</h1><p>一个 比较器 由一个运算符和版本号组成。</p>
+<ul>
+<li>​&lt;​ 小于</li>
+<li>&lt;=​ 小于或等于</li>
+<li><blockquote>
+<p>​ 大于</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>=​ 大于或等于</p>
+</blockquote>
+</li>
+<li>=​ 等于，如果没有操作符被指定，则认为是等于</li>
+</ul>
+<h1 id="版本号的范围由一组比较器决定"><a href="#版本号的范围由一组比较器决定" class="headerlink" title="版本号的范围由一组比较器决定"></a>版本号的范围由一组比较器决定</h1><h2 id="Hyphen-Ranges-​X-Y-Z-A-B-C​"><a href="#Hyphen-Ranges-​X-Y-Z-A-B-C​" class="headerlink" title="Hyphen Ranges ​X.Y.Z - A.B.C​"></a>Hyphen Ranges ​X.Y.Z - A.B.C​</h2><p>明确的包含的的组合<br>​- 1.2.3 - 2.3.4​ := ​&gt;=1.2.3 &lt;=2.3.4​<br>如果范围的首位是版本号的部分，缺失的部分会用 0 补位</p>
+<ul>
+<li>​1.2 - 2.3.4​ := ​&gt;=1.2.0 &lt;=2.3.4​<br>如果范围的末位的版本号的部分，则所提供的版本号被接受，且最终范围不会超出所提供的版本号</li>
+<li>1.2.3 - 2.3​ := ​&gt;=1.2.3 &lt;2.4.0​</li>
+<li>1.2.3 - 2​ := ​&gt;=1.2.3 &lt;3.0.0​</li>
+</ul>
+<h2 id="X-Ranges-​1-2-x​-​1-X​-​1-2-​-​​"><a href="#X-Ranges-​1-2-x​-​1-X​-​1-2-​-​​" class="headerlink" title="X-Ranges ​1.2.x​ ​1.X​ ​1.2.​ ​​"></a>X-Ranges ​1.2.x​ ​1.X​ ​1.2.<em>​ ​</em>​</h2><p>x，X，<em>中的任意一个都可以代表版本号中的一个数值<br>​</em>​ := ​&gt;=0.0.0​ (任意满足的版本)<br>​1.x​ := ​&gt;=1.0.0 &lt;2.0.0​ (匹配主版本号)<br>​1.2.x​ := ​&gt;=1.2.0 &lt;1.3.0​ (匹配主版本号和次版本号)</p>
+<h2 id="Tilde-Ranges-​1-2-3​-​1-2​-​-1​"><a href="#Tilde-Ranges-​1-2-3​-​1-2​-​-1​" class="headerlink" title="Tilde Ranges ​1.2.3​ ​1.2​ ​~1​"></a>Tilde Ranges ​<del>1.2.3​ ​</del>1.2​ ​~1​</h2><p>如果指定了次版本号，则允许修订号修改。<br>如果未指定，则允许次版本号修改。</p>
+<ul>
+<li>​~1.2.3​ := ​&gt;=1.2.3 &lt;1.(2+1).0​ := ​&gt;=1.2.3 &lt;1.3.0​</li>
+<li>​~1.2​ := ​&gt;=1.2.0 &lt;1.(2+1).0​ := ​&gt;=1.2.0 &lt;1.3.0​ (和 ​1.2.x​ 一样)</li>
+<li>~1​ := ​&gt;=1.0.0 &lt;(1+1).0.0​ := ​&gt;=1.0.0 &lt;2.0.0​ (和 ​1.x​ 一样)</li>
+<li>~0.2.3​ := ​&gt;=0.2.3 &lt;0.(2+1).0​ := ​&gt;=0.2.3 &lt;0.3.0​</li>
+<li>~0.2​ := ​&gt;=0.2.0 &lt;0.(2+1).0​ := ​&gt;=0.2.0 &lt;0.3.0​ (和 ​0.2.x​ 一样)</li>
+<li>​~0​ := ​&gt;=0.0.0 &lt;(0+1).0.0​ := ​&gt;=0.0.0 &lt;1.0.0​ (和 ​0.x​ 一样)</li>
+<li>​~1.2.3-beta.2​ := ​&gt;=1.2.3-beta.2 &lt;1.3.0​ 注意版本号大于或者等于 beta.2 的 1.2.3 的先行版本会被允许。1.2.3-beta.4 会被包含，但是 1.2.4-beta.2 会因为元组版号不一致而不被包含。（注意会先比较先行版本号）</li>
+</ul>
+<h2 id="Caret-Ranges-​-1-2-3​-​-0-2-5​-​-0-0-4​"><a href="#Caret-Ranges-​-1-2-3​-​-0-2-5​-​-0-0-4​" class="headerlink" title="Caret Ranges ​^1.2.3​ ​^0.2.5​ ​^0.0.4​"></a>Caret Ranges ​^1.2.3​ ​^0.2.5​ ​^0.0.4​</h2><p>允许不包括元组版本号中最左边的非零版号的修改。换而言之，​^1.0.0​ 允许修改次版本号以及修订版号。​^0.0.x​ 则不被允许修改。<br>相当一部分作者将”0.x’’版本视作”x’’是的“breaking-change”指标。<br>当作者会在 ​0.2.4​ ～ ​0.3.0​ 作出‘“breaking-change” 时，使用 Caret ranges 是一个合适的选择。 但是一般情况下 ​0.2.4​ 和 ​0.2.5​ 之间不会有“breaking-change”，只会有一些增量性的更新.</p>
+<ul>
+<li>^1.2.3​ := ​&gt;=1.2.3 &lt;2.0.0​</li>
+<li>​^0.2.3​ := ​&gt;=0.2.3 &lt;0.3.0​</li>
+<li>^0.0.3​ := ​&gt;=0.0.3 &lt;0.0.4​</li>
+<li>^1.2.3-beta.2​ := ​&gt;=1.2.3-beta.2 &lt;2.0.0​ 注意版本号大于或者等于 beta.2 的 1.2.3 的先行版本会被允许。1.2.3-beta.4 会被包含，但是 1.2.4-beta.2 会因为元组版号不一致而不被包含。</li>
+<li>^0.0.3-beta​ := ​&gt;=0.0.3-beta &lt;0.0.4​ 注意 ​0.0.3​ 先行版本中大于或者等于 ​beta​ 的版本号会被包含. 所以, ​0.0.3-pr.2​ 会被包含.<br>在解析 caret ranges 是, 缺失的修订版号会被指定为 0，但当主版本号和次版本号也为 0 是，修订版号可以是任意数值.</li>
+<li>​^1.2.x​ := ​&gt;=1.2.0 &lt;2.0.0​</li>
+<li>^0.0.x​ := ​&gt;=0.0.0 &lt;0.1.0​</li>
+<li>​^0.0​ := ​&gt;=0.0.0 &lt;0.1.0​<br>缺失的次版本号和修订版本号会被指定为 0，但可以是任意数值即使主版本也是 0</li>
+<li>​^1.x​ := ​&gt;=1.0.0 &lt;2.0.0​</li>
+<li>^0.x​ := ​&gt;=0.0.0 &lt;1.0.0​</li>
+</ul>
+<p>有什么不对之处，欢迎指正 💐</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">1.</span> <span class="toc-text">结论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%AD%E4%B9%89%E5%8C%96%E7%89%88%E6%9C%AC%E5%8F%B7%EF%BC%88semver-version%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">语义化版本号（semver version）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%8C%83%E5%9B%B4%EF%BC%88Ranges%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">范围（Ranges）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E5%8F%B7%E7%9A%84%E8%8C%83%E5%9B%B4%E7%94%B1%E4%B8%80%E7%BB%84%E6%AF%94%E8%BE%83%E5%99%A8%E5%86%B3%E5%AE%9A"><span class="toc-number">4.</span> <span class="toc-text">版本号的范围由一组比较器决定</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hyphen-Ranges-%E2%80%8BX-Y-Z-A-B-C%E2%80%8B"><span class="toc-number">4.1.</span> <span class="toc-text">Hyphen Ranges ​X.Y.Z - A.B.C​</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#X-Ranges-%E2%80%8B1-2-x%E2%80%8B-%E2%80%8B1-X%E2%80%8B-%E2%80%8B1-2-%E2%80%8B-%E2%80%8B%E2%80%8B"><span class="toc-number">4.2.</span> <span class="toc-text">X-Ranges ​1.2.x​ ​1.X​ ​1.2.​ ​​</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tilde-Ranges-%E2%80%8B1-2-3%E2%80%8B-%E2%80%8B1-2%E2%80%8B-%E2%80%8B-1%E2%80%8B"><span class="toc-number">4.3.</span> <span class="toc-text">Tilde Ranges ​1.2.3​ ​1.2​ ​~1​</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Caret-Ranges-%E2%80%8B-1-2-3%E2%80%8B-%E2%80%8B-0-2-5%E2%80%8B-%E2%80%8B-0-0-4%E2%80%8B"><span class="toc-number">4.4.</span> <span class="toc-text">Caret Ranges ​^1.2.3​ ​^0.2.5​ ​^0.0.4​</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/semer-version/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/semer-version/&text=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/semer-version/&title=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/semer-version/&is_video=false&description=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？&body=Check out this article: http://lastnigtic.cn/semer-version/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/semer-version/&title=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/semer-version/&title=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/semer-version/&title=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/semer-version/&title=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/semer-version/&name=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/semer-version/&t=【译】你还认为package.json中^是锁定主版本号，~是修改修订版本号吗？"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2017-2021
+    lastnigtic
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.staticfile.org/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.slim.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.8/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="ES6 允许按照一定模式，从数组和对象中提取值，对变量进行赋值，这被称为解构。一、数组的解构赋值 一个最简单的例子 123456var [a,b,c] &#x3D; [1,2,3];&#x2F;&#x2F; a&#x3D;1, b&#x3D;2, c&#x3D;3&#x2F;&#x2F; 这其实是一种模式匹配，只要两边的模式相同，就能正确地赋值：let [a,[b,c]] &#x3D; [1,[2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES6 变量解构赋值">
+<meta property="og:url" content="http://lastnigtic.cn/ES6-%20destructuring/index.html">
+<meta property="og:site_name" content="Blog of lastnigtic">
+<meta property="og:description" content="ES6 允许按照一定模式，从数组和对象中提取值，对变量进行赋值，这被称为解构。一、数组的解构赋值 一个最简单的例子 123456var [a,b,c] &#x3D; [1,2,3];&#x2F;&#x2F; a&#x3D;1, b&#x3D;2, c&#x3D;3&#x2F;&#x2F; 这其实是一种模式匹配，只要两边的模式相同，就能正确地赋值：let [a,[b,c]] &#x3D; [1,[2">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-05-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-05-01T15:37:49.467Z">
+<meta property="article:author" content="lastnigtic">
+<meta property="article:tag" content="lastnigtic">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>ES6 变量解构赋值</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/js-count/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/ES6-arrow/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/ES6-%20destructuring/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/ES6-%20destructuring/&text=ES6 变量解构赋值"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/ES6-%20destructuring/&title=ES6 变量解构赋值"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/ES6-%20destructuring/&is_video=false&description=ES6 变量解构赋值"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ES6 变量解构赋值&body=Check out this article: http://lastnigtic.cn/ES6-%20destructuring/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/ES6-%20destructuring/&title=ES6 变量解构赋值"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/ES6-%20destructuring/&title=ES6 变量解构赋值"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/ES6-%20destructuring/&title=ES6 变量解构赋值"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/ES6-%20destructuring/&title=ES6 变量解构赋值"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/ES6-%20destructuring/&name=ES6 变量解构赋值&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/ES6-%20destructuring/&t=ES6 变量解构赋值"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        ES6 变量解构赋值
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lastnigtic</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-05-11T16:00:00.000Z" itemprop="datePublished">2017-05-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>ES6 允许按照一定模式，从数组和对象中提取值，对变量进行赋值，这被称为解构。<br>一、数组的解构赋值</p>
+<p>一个最简单的例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var [a,b,c] &#x3D; [1,2,3];&#x2F;&#x2F; a&#x3D;1, b&#x3D;2, c&#x3D;3</span><br><span class="line">&#x2F;&#x2F; 这其实是一种模式匹配，只要两边的模式相同，就能正确地赋值：</span><br><span class="line">let [a,[b,c]] &#x3D; [1,[2,3]];&#x2F;&#x2F; a&#x3D;1, b&#x3D;2, c&#x3D;3</span><br><span class="line">let [ , ,c] &#x3D; [1,2,3];&#x2F;&#x2F; c&#x3D;3</span><br><span class="line">let [c] &#x3D; [1,2,3];&#x2F;&#x2F; c &#x3D; 1</span><br><span class="line">let [a,c] &#x3D; [1];&#x2F;&#x2F; a &#x3D; 1, c undefined</span><br></pre></td></tr></table></figure>
+
+<p>如果等号的右边不是数组（或者严格地说，不是可遍历的结构），那么将会报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;  报错</span><br><span class="line">let [foo] &#x3D; 1;</span><br><span class="line">let [foo] &#x3D; false;</span><br><span class="line">let [foo] &#x3D; NaN;</span><br><span class="line">let [foo] &#x3D; undefined;</span><br><span class="line">let [foo] &#x3D; null;</span><br><span class="line">let [foo] &#x3D; &#123;&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>默认值可以引用解构赋值的其他变量，但该变量必须已经声明:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let [x &#x3D; 1, y &#x3D; x] &#x3D; []; &#x2F;&#x2F; x&#x3D;1; y&#x3D;1</span><br><span class="line">let [x &#x3D; 1, y &#x3D; x] &#x3D; [2]; &#x2F;&#x2F; x&#x3D;2; y&#x3D;2</span><br><span class="line">let [x &#x3D; 1, y &#x3D; x] &#x3D; [1, 2]; &#x2F;&#x2F; x&#x3D;1; y&#x3D;2</span><br><span class="line">let [x &#x3D; y, y &#x3D; 1] &#x3D; []; &#x2F;&#x2F; ReferenceError</span><br></pre></td></tr></table></figure>
+
+<p>二、对象的解构赋值<br>对象的解构与数组有一个重要的不同。数组的元素是按次序排列的，变量的取值由它的位置决定；而对象的属性没有次序，变量必须与属性同名，才能取到正确的值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">let &#123;first,second&#125; &#x3D; &#123;first:1,second:2&#125;;</span><br><span class="line">let &#123;third,fourth&#125; &#x3D; &#123;fourth:4,third:3&#125;;</span><br><span class="line">console.log(first,second,third,fourth);&#x2F;&#x2F; 1，2，3，4</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 如果变量名与属性名不一致，则：</span><br><span class="line">let &#123;first:number&#125; &#x3D; &#123;first:1&#125;;</span><br><span class="line">console.log(number); &#x2F;&#x2F; 1</span><br><span class="line">console.log(first); &#x2F;&#x2F; Uncaught ReferenceError</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 可以正确赋值</span><br><span class="line">let number &#x3D; &#123;</span><br><span class="line">    first: 1,</span><br><span class="line">    second: 2</span><br><span class="line">&#125;</span><br><span class="line">let &#123;first,second&#125; &#x3D; number; &#x2F;&#x2F;first &#x3D; 1, second &#x3D; 2</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 正确嵌套的可以赋值</span><br><span class="line">var node &#x3D; &#123;</span><br><span class="line">	loc: &#123;</span><br><span class="line">		start: &#123;</span><br><span class="line">			line: 1,</span><br><span class="line">			column: 5</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line">var &#123; loc: &#123; start: &#123; line &#125;&#125; &#125; &#x3D; node;</span><br><span class="line">line &#x2F;&#x2F; 1</span><br><span class="line">loc &#x2F;&#x2F; error: loc is undefined</span><br><span class="line">start &#x2F;&#x2F; error: start is undefined</span><br></pre></td></tr></table></figure>
+
+<p>对象的解构也可以指定默认值(默认值生效的条件是，对象的属性值严格等于 undefined )：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var &#123;x &#x3D; 3&#125; &#x3D; &#123;&#125;;</span><br><span class="line">x &#x2F;&#x2F; 3</span><br><span class="line">var &#123;x, y &#x3D; 5&#125; &#x3D; &#123;x: 1&#125;;</span><br><span class="line">x &#x2F;&#x2F; 1</span><br><span class="line">y &#x2F;&#x2F; 5</span><br><span class="line">var &#123; message: msg &#x3D; &quot;biubiubiu&quot; &#125; &#x3D; &#123;&#125;;</span><br><span class="line">msg &#x2F;&#x2F; &quot;biubiubiu&quot;</span><br></pre></td></tr></table></figure>
+
+<p>三、字符串的解构赋值<br>字符串被转换成了一个类似数组的对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let [a,b,c] &#x3D; &#39;abc&#39;;</span><br><span class="line">console.log(a,b,c);&#x2F;&#x2F; a&#x3D;a,b&#x3D;b,c&#x3D;c</span><br><span class="line">let &#123;length:len&#125; &#x3D; &#39;byebye&#39;;</span><br><span class="line">console.log(len);&#x2F;&#x2F; 6</span><br></pre></td></tr></table></figure>
+
+<p>四、数值和布尔值的解构赋值<br>如果等号右边是数值和布尔值，则会先转为对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let &#123;toString: s&#125; &#x3D; 123;</span><br><span class="line">s &#x3D;&#x3D;&#x3D; Number.prototype.toString &#x2F;&#x2F; true</span><br><span class="line">let &#123;toString: s&#125; &#x3D; true;</span><br><span class="line">s &#x3D;&#x3D;&#x3D; Boolean.prototype.toString &#x2F;&#x2F; true</span><br></pre></td></tr></table></figure>
+
+<p>五、函数参数的解构赋值(用得最多的地方)<br>函数 add 的参数表面上是一个数组，但在传入参数的那一刻，数组参数就被解构成变量 x 和 y 。对于函数内部的代码来说，它们能感受到的参数就是 x 和 y</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">function add([x, y])&#123;</span><br><span class="line">	return x + y;</span><br><span class="line">&#125;</span><br><span class="line">add([1, 2]); &#x2F;&#x2F; 3</span><br><span class="line">&#x2F;&#x2F; 函数参数的解构也可以使用默认值。</span><br><span class="line">function move(&#123;x &#x3D; 0, y &#x3D; 0&#125; &#x3D; &#123;&#125;) &#123;</span><br><span class="line">	return [x, y];</span><br><span class="line">&#125;</span><br><span class="line">move(&#123;x: 3, y: 8&#125;); &#x2F;&#x2F; [3, 8]</span><br><span class="line">move(&#123;x: 3&#125;); &#x2F;&#x2F; [3, 0]</span><br><span class="line">move(&#123;&#125;); &#x2F;&#x2F; [0, 0]</span><br><span class="line">move(); &#x2F;&#x2F; [0, 0]</span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/ES6-%20destructuring/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/ES6-%20destructuring/&text=ES6 变量解构赋值"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/ES6-%20destructuring/&title=ES6 变量解构赋值"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/ES6-%20destructuring/&is_video=false&description=ES6 变量解构赋值"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ES6 变量解构赋值&body=Check out this article: http://lastnigtic.cn/ES6-%20destructuring/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/ES6-%20destructuring/&title=ES6 变量解构赋值"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/ES6-%20destructuring/&title=ES6 变量解构赋值"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/ES6-%20destructuring/&title=ES6 变量解构赋值"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/ES6-%20destructuring/&title=ES6 变量解构赋值"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/ES6-%20destructuring/&name=ES6 变量解构赋值&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/ES6-%20destructuring/&t=ES6 变量解构赋值"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2017-2021
+    lastnigtic
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.staticfile.org/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.slim.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.8/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
