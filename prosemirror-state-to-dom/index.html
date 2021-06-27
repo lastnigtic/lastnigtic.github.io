@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Blog of lastnigtic">
 <meta property="og:description" content="上一篇文章简单介绍了prosemirror内部如何对输入行为作出反应，这一篇文章主要介绍一下prosemirror如何完成从state到浏览器DOM的渲染。 视图使用prosemirror时我们有以下三种定义编辑器内视图渲染的方式：  直接使用nodeType&#x2F;markType中的toDOM属性，实际渲染由prosemirror-model提供的DOMSerializer.renderSpec负责">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/pm-view-desc.png">
+<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/pm-view.png">
 <meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/update-first.png">
 <meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/update-second.png">
 <meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/update-third.png">
@@ -25,12 +25,12 @@
 <meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/text-node.png">
 <meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/mark-weried.gif">
 <meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/mark-update.png">
-<meta property="article:published_time" content="2020-09-25T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-06-27T14:41:52.637Z">
+<meta property="article:published_time" content="2020-10-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-06-27T14:45:17.796Z">
 <meta property="article:author" content="lastnigtic">
 <meta property="article:tag" content="lastnigtic">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/pm-view-desc.png">
+<meta name="twitter:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/pm-view.png">
     
     
       
@@ -83,8 +83,6 @@
     <br/>
     <span id="actions">
       <ul>
-        
-        <li><a class="icon" aria-label="Previous post " href="/prosemirror-first/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" aria-label="Next post " href="/prosemirror-state-modify/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
@@ -139,7 +137,7 @@
       
     <div class="postdate">
       
-        <time datetime="2020-09-25T16:00:00.000Z" itemprop="datePublished">2020-09-26</time>
+        <time datetime="2020-10-08T16:00:00.000Z" itemprop="datePublished">2020-10-09</time>
         
       
     </div>
@@ -165,7 +163,7 @@
 <p>实际上作者在state到dom这一层做了很多工作，帮我们把复杂度都抹平了，平时使用起来无需关注到这部分逻辑，但了解这一步过程才能帮助我们在使用时更好地排查问题以及了解编辑器设计的理念。</p>
 <h2 id="ViewDesc"><a href="#ViewDesc" class="headerlink" title="ViewDesc"></a><strong>ViewDesc</strong></h2><p>​        prosemirror内部存在一种用于描述视图对象的特殊结构——ViewDesc，他会绑定在编辑器的DOM中的pmViewDesc属性上，整篇文档的desc挂载在view实例的docView上。作者在文档中没有提供这部分的介绍，但这部分时view中最重要的一环，直接与我们看到的内容相关。</p>
 <p>ViewDesc可以看作是dom与编辑器state的中间层，相当于是prosemirror的<code>virtual-dom</code>。ViewDesc会挂载到相应的dom的pmViewDesc属性上，并保存相应的dom和node：</p>
-<p><img src="/prosemirror-state-to-dom/pm-view-desc.png" alt="img"></p>
+<p><img src="/prosemirror-state-to-dom/pm-view.png" alt="img"></p>
 <p>prosemirror-view总共定义了7种viewDesc：</p>
 <ul>
 <li>NodeViewDesc<ul>
