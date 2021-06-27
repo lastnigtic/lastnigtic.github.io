@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="上一篇文章简单介绍了prosemirror内部如何对输入行为作出反应，这一篇文章主要介绍一下prosemirror如何完成从state到浏览器DOM的渲染。 视图使用prosemirror时我们有以下三种定义编辑器内视图渲染的方式：  直接使用nodeType&#x2F;markType中的toDOM属性，实际渲染由prosemirror-model提供的DOMSerializer.renderSpec负责">
+<meta property="og:type" content="article">
+<meta property="og:title" content="富文本编辑框架Prosemirror -  从State到DOM">
+<meta property="og:url" content="http://lastnigtic.cn/prosemirror-state-to-dom/index.html">
+<meta property="og:site_name" content="Blog of lastnigtic">
+<meta property="og:description" content="上一篇文章简单介绍了prosemirror内部如何对输入行为作出反应，这一篇文章主要介绍一下prosemirror如何完成从state到浏览器DOM的渲染。 视图使用prosemirror时我们有以下三种定义编辑器内视图渲染的方式：  直接使用nodeType&#x2F;markType中的toDOM属性，实际渲染由prosemirror-model提供的DOMSerializer.renderSpec负责">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/pm-view-desc.png">
+<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/update-first.png">
+<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/update-second.png">
+<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/update-third.png">
+<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/update-fourth.png">
+<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/update-fifth.png">
+<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/update-sixth.png">
+<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/update-seventh.png">
+<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/mark-view.png">
+<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/text-node.png">
+<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/mark-weried.gif">
+<meta property="og:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/mark-update.png">
+<meta property="article:published_time" content="2020-09-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-06-27T14:41:52.637Z">
+<meta property="article:author" content="lastnigtic">
+<meta property="article:tag" content="lastnigtic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://lastnigtic.cn/prosemirror-state-to-dom/pm-view-desc.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>富文本编辑框架Prosemirror -  从State到DOM</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/prosemirror-first/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/prosemirror-state-modify/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/prosemirror-state-to-dom/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/prosemirror-state-to-dom/&text=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/prosemirror-state-to-dom/&title=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/prosemirror-state-to-dom/&is_video=false&description=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=富文本编辑框架Prosemirror -  从State到DOM&body=Check out this article: http://lastnigtic.cn/prosemirror-state-to-dom/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/prosemirror-state-to-dom/&title=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/prosemirror-state-to-dom/&title=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/prosemirror-state-to-dom/&title=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/prosemirror-state-to-dom/&title=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/prosemirror-state-to-dom/&name=富文本编辑框架Prosemirror -  从State到DOM&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/prosemirror-state-to-dom/&t=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE"><span class="toc-number">1.</span> <span class="toc-text">视图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ViewDesc"><span class="toc-number">2.</span> <span class="toc-text">ViewDesc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE%E6%9B%B4%E6%96%B0"><span class="toc-number">3.</span> <span class="toc-text">视图更新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">更新过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E6%9B%B4%E6%96%B0"><span class="toc-number">3.2.</span> <span class="toc-text">节点更新</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B-1"><span class="toc-number">4.</span> <span class="toc-text">更新过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E"><span class="toc-number">4.1.</span> <span class="toc-text">新增</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0"><span class="toc-number">4.2.</span> <span class="toc-text">更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">4.3.</span> <span class="toc-text">删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8"><span class="toc-number">4.4.</span> <span class="toc-text">移动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mark%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B"><span class="toc-number">5.</span> <span class="toc-text">Mark更新过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        富文本编辑框架Prosemirror -  从State到DOM
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lastnigtic</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-09-25T16:00:00.000Z" itemprop="datePublished">2020-09-26</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>上一篇文章简单介绍了prosemirror内部如何对输入行为作出反应，这一篇文章主要介绍一下prosemirror如何完成从state到浏览器DOM的渲染。</p>
+<h2 id="视图"><a href="#视图" class="headerlink" title="视图"></a><strong>视图</strong></h2><p>使用prosemirror时我们有以下三种定义编辑器内视图渲染的方式：</p>
+<ol>
+<li>直接使用nodeType/markType中的toDOM属性，实际渲染由<code>prosemirror-model</code>提供的<code>DOMSerializer.renderSpec</code>负责</li>
+<li>使用nodeView渲染自定义的节点</li>
+<li>使用decoration渲染与doc内容无关的节点</li>
+</ol>
+<p>​        从使用者的角度看，我们在doc插入了什么内容，dom中就会渲染出相应类型的内容，这一种方式看起来很像React的数据驱动视图的形式。</p>
+<p>实际上作者在state到dom这一层做了很多工作，帮我们把复杂度都抹平了，平时使用起来无需关注到这部分逻辑，但了解这一步过程才能帮助我们在使用时更好地排查问题以及了解编辑器设计的理念。</p>
+<h2 id="ViewDesc"><a href="#ViewDesc" class="headerlink" title="ViewDesc"></a><strong>ViewDesc</strong></h2><p>​        prosemirror内部存在一种用于描述视图对象的特殊结构——ViewDesc，他会绑定在编辑器的DOM中的pmViewDesc属性上，整篇文档的desc挂载在view实例的docView上。作者在文档中没有提供这部分的介绍，但这部分时view中最重要的一环，直接与我们看到的内容相关。</p>
+<p>ViewDesc可以看作是dom与编辑器state的中间层，相当于是prosemirror的<code>virtual-dom</code>。ViewDesc会挂载到相应的dom的pmViewDesc属性上，并保存相应的dom和node：</p>
+<p><img src="/prosemirror-state-to-dom/pm-view-desc.png" alt="img"></p>
+<p>prosemirror-view总共定义了7种viewDesc：</p>
+<ul>
+<li>NodeViewDesc<ul>
+<li>prosemirror基本节点的desc，涉及dom与节点的绑定，更新和销毁等</li>
+</ul>
+</li>
+<li>CustomNodeViewDesc<ul>
+<li>继承NodeViewDesc，主要扩展了update的判断，以及暴露诸如select，destroy等的钩子，NodeView对应</li>
+</ul>
+</li>
+<li>TextViewDesc<ul>
+<li>继承NodeViewDesc，文本节点的desc</li>
+</ul>
+</li>
+<li>MarkViewDesc<ul>
+<li>mark的desc，为了简化和可预测，有固定的嵌套顺序</li>
+</ul>
+</li>
+<li>WidgetViewDesc<ul>
+<li>decoration的desc，为state.doc中的数据无关</li>
+</ul>
+</li>
+<li>CompositionViewDesc<ul>
+<li>联想输入的desc，用于表明和保护输入节点</li>
+</ul>
+</li>
+<li>BRHackViewDesc<ul>
+<li>插入一个br，用于处理空段落的高度高度问题</li>
+</ul>
+</li>
+</ul>
+<p>viewDesc主要提供了匹配节点，获取索引，状态标记等等方法，帮助prosemirror更好地处理state与dom的状态同步</p>
+<h2 id="视图更新"><a href="#视图更新" class="headerlink" title="视图更新"></a><strong>视图更新</strong></h2><p>​        对于prosemirror来说，视图的更新面向的不是用户做了什么操作，而是面向state。</p>
+<p>用户做了什么操作这部分由DOMObserver去处理并应用到state上，视图显示的状态与state强相关，抹平了处理用户行为的复杂性，简化了更新的处理，但同样会带来一些问题，如对用户的行为无法感知导致的节点不能复用的问题等。</p>
+<p>​        这里我们从插入一个节点开始，探究prosemirror视图更新的过程。这篇文章略去DOMObserver对Mutation的分析，直接从视图更新开始，假设我们已经拿到了新的state，接下来我们来分析下prosemirror是如何将新的state应用到视图上的。</p>
+<h3 id="更新过程"><a href="#更新过程" class="headerlink" title="更新过程"></a>更新过程</h3><p>​        拿到新的<code>state</code>之后会调用<code>view.updatState(newState)</code>，<code>updateState</code>会调用<code>docView.update</code>更新视图。docView实际上就是NodeViewDesc的一个实例，默认的NodeViewDesc的更新方法为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">update(node, outerDeco, innerDeco, view) &#123;</span><br><span class="line">  if (this.dirty &#x3D;&#x3D; NODE_DIRTY || !node.sameMarkup(this.node)) return false</span><br><span class="line">  this.updateInner(node, outerDeco, innerDeco, view)</span><br><span class="line">  return true</span><br><span class="line">&#125;        </span><br></pre></td></tr></table></figure>
+
+<p>这一步会判断当前节点的数据是否发生变化，如果发生变化，返回false，会重建整个节点。返回true则证明更新成功，进行子节点的更新。</p>
+<p>​        我们在看下<code>updateInner</code>这个方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">updateInner(node, outerDeco, innerDeco, view) &#123;</span><br><span class="line">  this.updateOuterDeco(outerDeco)</span><br><span class="line">  this.node &#x3D; node</span><br><span class="line">  this.innerDeco &#x3D; innerDeco</span><br><span class="line">  if (this.contentDOM) this.updateChildren(view, this.posAtStart)</span><br><span class="line">  this.dirty &#x3D; NOT_DIRTY</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他会先更新外部的decoration，然后进行更新过程中最核心的处理<code>updateChildren</code>，主要可以分为下面几个部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">updateChildren() &#123;</span><br><span class="line">    &#x2F;&#x2F; ...</span><br><span class="line">    const updater &#x3D; new ViewTreeUpdater(docView)</span><br><span class="line">    &#x2F;&#x2F; ...</span><br><span class="line">    iterDeco(node, decos, onDeco, onNode);</span><br><span class="line">    &#x2F;&#x2F; ...</span><br><span class="line">    if (updater.changed) renderChildren()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>首先会根据docView创建一个updater，主要服务于更新过程（代表当前的节点更新树，拥有子节点的子节点会创建自己的updater）。updater中会匹配docView中的node和descs，从后往前匹配，保存相同的desc（preMatched）和最后一个匹配的desc的offset（preMatchedOffset）。</li>
+<li>根据doc和decorations的信息顺序遍历更新，根据匹配到的node和deco的分别调用onNode以及onDeco方法更新。</li>
+<li>若updater中有更新，属性changed会被置为true，并进行子节点的渲染（根据实际的dom以及更新后的descs）</li>
+<li>从上面的描述，可以看到最核心的方法在第二部份，我们主要分析下第二步中onNode做的事情</li>
+</ol>
+<h3 id="节点更新"><a href="#节点更新" class="headerlink" title="节点更新"></a>节点更新</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">onNode &#x3D; (child, outerDeco, innerDeco, i) &#x3D;&gt; &#123;</span><br><span class="line">  &#x2F;&#x2F; Make sure the wrapping mark descs match the node&#39;s marks.</span><br><span class="line">  updater.syncToMarks(child.marks, inline, view)</span><br><span class="line">  &#x2F;&#x2F; Either find an existing desc that exactly matches this node,</span><br><span class="line">  &#x2F;&#x2F; and drop the descs before it.</span><br><span class="line">  updater.findNodeMatch(child, outerDeco, innerDeco, i) ||</span><br><span class="line">  &#x2F;&#x2F; Or try updating the next desc to reflect this node.</span><br><span class="line">  updater.updateNextNode(child, outerDeco, innerDeco, view, i) ||</span><br><span class="line">  &#x2F;&#x2F; Or just add it as a new desc.</span><br><span class="line">  updater.addNode(child, outerDeco, innerDeco, view, off)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><code>syncToMarks()</code>用于更新mark。</li>
+</ol>
+<ol>
+<li>之后便开始对Node的更新操作，总结起来就是三步：<ol>
+<li>findeNodeMatch：在updater中寻找是否有viewDesc的node等于当前node（最多匹配当前位置的后四位，不匹配最后一位。至于为什么最多只匹配后四位？可能是出于性能考虑吧，作者没有明确说这一点），若没有，进入下一步</li>
+</ol>
+</li>
+</ol>
+<ul>
+<li>```<br>findNodeMatch(node, outerDeco, innerDeco, index) {<pre><code>let found = -1, preMatch 
+// ...
+if (preMatch &amp;&amp; preMatch.matchesNode(node, outerDeco, innerDeco)) &#123;
+  found = children.indexOf(preMatch)
+&#125; else &#123;
+  for (let i = this.index, e = Math.min(children.length, i + 5); i &lt; e; i++) &#123;
+    // matches
+  &#125;
+&#125;
+if (found &lt; 0) return false
+this.destroyBetween(this.index, found)
+this.index++
+return true
+</code></pre>
+}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  如何确定是同一个节点？</span><br><span class="line"></span><br><span class="line">主要就是判断是内存地址，节点属性，&#96;decorations&#96;，自元素是否是一致的。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+matchesNode(node, outerDeco, innerDeco) {<br>return this.dirty == NOT_DIRTY &amp;&amp; node.eq(this.node) &amp;&amp;<br>sameOuterDeco(outerDeco, this.outerDeco) &amp;&amp; innerDeco.eq(this.innerDeco)<br>}</li>
+</ul>
+<p>// Node<br>eq(other) {<br>  return this == other || (this.sameMarkup(other) &amp;&amp; this.content.eq(other.content))<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">1. &#96;updateNextNode&#96;：若updater的children中当前位置是NodeViewDesc类型，分两种情况</span><br><span class="line">   1. 若在updater的preMatched中存在且索引preMatch加上preMatchOffset等于当前node再docView.children中index，尝试更新节点，否则视为流转到下一步（这一步这么判断的原因是：如果preMatch+preMatchOffset !&#x3D; index，则证明updater中的数据有误，docView.children中的数据可能有修改，此时以state的数据为准）</span><br><span class="line">   2. 若在updater的preMatched中不存在，尝试更新节点，否则视为流转到下一步</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>updateNextNode(node, outerDeco, innerDeco, view, index) {<br>    if (this.index == this.top.children.length) return false<br>    let next = this.top.children[this.index]<br>    if (next instanceof NodeViewDesc) {<br>      let preMatch = this.preMatched.indexOf(next)<br>      if (preMatch &gt; -1 &amp;&amp; preMatch + this.preMatchOffset != index) return false<br>      let nextDOM = next.dom<br>.<br>      // …</p>
+<pre><code>  if (next.update(node, outerDeco, innerDeco, view)) &#123;
+    if (next.dom != nextDOM) this.changed = true
+    this.index++
+    return true
+  &#125;
+&#125;
+return false
+</code></pre>
+<p>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">1. &#96;addNode&#96;：这一步就是直接在updater的children中当前索引的位置直接插入新创建的viewDesc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>addNode(node, outerDeco, innerDeco, view, pos) {<br>    this.top.children.splice(this.index++, 0, NodeViewDesc.create(…))<br>    this.changed = true<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 渲染到视图</span><br><span class="line"></span><br><span class="line">若有需要重建的节点或者删除的节点，updater.changed会被置为true，进入dom层面的操作。</span><br><span class="line"></span><br><span class="line">- 此时的操作以update后的viewDescs（此时即为docView.children）的数据为准，调整当前视图中dom展示的节点，不会有位置的调整，不匹配就销毁，不存在就重建。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>function renderDescs(parentDOM, descs) {<br>  let dom = parentDOM.firstChild<br>  for (let i = 0; i &lt; descs.length; i++) {<br>    let desc = descs[i], childDOM = desc.dom<br>    // dom为当前视图中的dom，childDOM为desc对应的dom<br>    if (childDOM.parentNode == parentDOM) { // 证明Child在视图中存在<br>      while (childDOM != dom) dom = rm(dom) // rm()会返回nextSibling，清除不匹配的dom<br>      dom = dom.nextSibling<br>    } else {<br>      parentDOM.insertBefore(childDOM, dom)<br>    }<br>    // …<br>  }<br>  while (dom) dom = rm(dom)<br>}</p>
+<p>```</p>
+<p>通过上面我们了解prosemirror中视图更新处理的过程，实际上就是state到DOM的过程，prosemirorr中视图的更新都通过这个过程完成。</p>
+<h2 id="更新过程-1"><a href="#更新过程-1" class="headerlink" title="更新过程"></a><strong>更新过程</strong></h2><p>​        基于上面说到的规则，我们分析下以下几种输入行为下的更新过程</p>
+<h3 id="新增"><a href="#新增" class="headerlink" title="新增"></a>新增</h3><ul>
+<li>新增节点不能在findNodeMatch找到，会在当前位置重建，其他的节点都能在旧的docView找到，不用重建</li>
+</ul>
+<p><img src="/prosemirror-state-to-dom/update-first.png" alt="img"></p>
+<h3 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h3><ul>
+<li>与新增节点一致，主要区别在于updateNextNode这一步，调用就viewdesc的update方法，若update返回false，增视为需要重建节点，否则视为成功更新。若这一步为customNodeView，我们则可以干预这个过程</li>
+<li>下图展示返回false的情况，旧的node2会在匹配到node3时被destory</li>
+</ul>
+<p><img src="/prosemirror-state-to-dom/update-second.png" alt="img"></p>
+<ul>
+<li>图展示返回true的情况，所有节点都能匹配到不需要重建</li>
+</ul>
+<p><img src="/prosemirror-state-to-dom/update-third.png" alt="img"></p>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><ul>
+<li>删除节点后旧的viewdesc中能匹配到所有的node，匹配到node会销毁新旧index之间的所有的viewdesc</li>
+</ul>
+<p><img src="/prosemirror-state-to-dom/update-fourth.png" alt="img"></p>
+<h3 id="移动"><a href="#移动" class="headerlink" title="移动"></a>移动</h3><ul>
+<li>移动的情况比较特殊，跟拖动的距离以变化的位置都有关系（主要和findNodeMatch的处理有关系）<ul>
+<li>把节点从前面移动到后面!</li>
+</ul>
+</li>
+</ul>
+<p><img src="/prosemirror-state-to-dom/update-fifth.png" alt="img"></p>
+<ul>
+<li><p>这种情况下，重建的节点会是拖动的节点，比如上图的情况中，findNodeMatch在匹配到3时，拖动的节点2会被销毁，直到遍历到最后被重建。</p>
+</li>
+<li><p>把节点从后面拖动到前面，这时候的处理分情况：</p>
+<ul>
+<li>非最后一位移动，且距离小于4</li>
+</ul>
+</li>
+</ul>
+<p><img src="/prosemirror-state-to-dom/update-sixth.png" alt="img"></p>
+<ul>
+<li><p>这种情况下，因为4在findNodeMatch中可以被找到（index: 0, found: 4)，会导致0到4之间的节点被销毁。所以这种情况下，1、2、3会被重建，而4不会被重建。</p>
+</li>
+<li><p>最后一位移动或者是距离大于4</p>
+</li>
+</ul>
+<p><img src="/prosemirror-state-to-dom/update-seventh.png" alt="img"></p>
+<ul>
+<li>这种情况下，由于5不会在findNodeMatch中找到，所以会在首位重建节点。匹配到4之后遍历结束，销毁剩余节点。所以这种情况下5会被重建。</li>
+</ul>
+<h2 id="Mark更新过程"><a href="#Mark更新过程" class="headerlink" title="Mark更新过程"></a><strong>Mark更新过程</strong></h2><p>Mark的更新过程与Node的更新有比较大的区别，Mark在state中是作为node的一个属性，而在ViewDesc中，他则是作为一个高层级的节点，他可以包括其他节点（包括自己本身）,所以他在state和docView中的结构是不一致的。</p>
+<p>比如<code>&lt;p&gt;&lt;strong&gt;123&lt;/strong&gt;&lt;/p&gt;</code>  :</p>
+<p><img src="/prosemirror-state-to-dom/mark-view.png" alt="img"></p>
+<p><img src="/prosemirror-state-to-dom/text-node.png" alt="img"></p>
+<p>而prosemirror在对dom做渲染时，是以更新后的ViewDescs为准，所以promirror更新的逻辑是这样：</p>
+<ul>
+<li><p>在每次onDeco，onNode都会调用<code>SyncToMarks</code></p>
+<p>，主要做几个操作</p>
+<ul>
+<li>当前有marks，匹配后两位内是否存在相同的mark<ul>
+<li>存在：销毁当前位置与匹配到的位置之间的内容，帮当前顶层和位置推入updater.stack，位置重置为0，把MarkViewDesc放到updater.top，开始对MarkViewDesc中的内容做更新。</li>
+<li>不存在：创建一个新的MarkViewDesc</li>
+</ul>
+</li>
+<li>当前没有marks，updater.stack中有内容，MarkViewDesc出栈，updater状态恢复</li>
+</ul>
+</li>
+</ul>
+<p>所以会有一个奇怪的现象：当后面第二位有同样的mark时，会导致中间的节点没有必要的重建：</p>
+<p><img src="/prosemirror-state-to-dom/mark-weried.gif" alt="img"></p>
+<p>这个过程的变化如下图所示：</p>
+<p><img src="/prosemirror-state-to-dom/mark-update.png" alt="img"></p>
+<p>因为3和1被设置的mark一致，所以会匹配到3，1和nodeView被销毁，这个行为自然是不应该的，作者的解释是为了修复这个<a target="_blank" rel="noopener" href="https://github.com/prosemirror/prosemirror/issues/872">Issues</a>，重用mark时做了更激进的匹配（这也是一个优化的点，贡献代码的机会XD）。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h2><p>​        这篇文章主要讲了prosemirror是如state与DOM之间的关系，举了几个比较简单的例子，实际情况下，还需要考虑Decoration的渲染，mark与decoration与node嵌套的渲染，以及ltr，rtl的顺序等等的处理，节点的比对和渲染复杂度指数上升。节点复用在这些情况下无法保证，所以开发一些功能时，不应当依赖某个视图的生命周期。</p>
+<p>初窥prosemirror的渲染流程，与react一样，使用prosemirror时我们一般不需要关心到视图这一层，这也是现在各主流富文本编辑器框的一套思路。后面的文章会继续探究用户形如何被捕获，state内部如何更新，索引如何构建等的流程。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE"><span class="toc-number">1.</span> <span class="toc-text">视图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ViewDesc"><span class="toc-number">2.</span> <span class="toc-text">ViewDesc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE%E6%9B%B4%E6%96%B0"><span class="toc-number">3.</span> <span class="toc-text">视图更新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">更新过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E6%9B%B4%E6%96%B0"><span class="toc-number">3.2.</span> <span class="toc-text">节点更新</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B-1"><span class="toc-number">4.</span> <span class="toc-text">更新过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E"><span class="toc-number">4.1.</span> <span class="toc-text">新增</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0"><span class="toc-number">4.2.</span> <span class="toc-text">更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">4.3.</span> <span class="toc-text">删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8"><span class="toc-number">4.4.</span> <span class="toc-text">移动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mark%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B"><span class="toc-number">5.</span> <span class="toc-text">Mark更新过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/prosemirror-state-to-dom/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/prosemirror-state-to-dom/&text=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/prosemirror-state-to-dom/&title=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/prosemirror-state-to-dom/&is_video=false&description=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=富文本编辑框架Prosemirror -  从State到DOM&body=Check out this article: http://lastnigtic.cn/prosemirror-state-to-dom/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/prosemirror-state-to-dom/&title=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/prosemirror-state-to-dom/&title=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/prosemirror-state-to-dom/&title=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/prosemirror-state-to-dom/&title=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/prosemirror-state-to-dom/&name=富文本编辑框架Prosemirror -  从State到DOM&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/prosemirror-state-to-dom/&t=富文本编辑框架Prosemirror -  从State到DOM"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2017-2021
+    lastnigtic
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.staticfile.org/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.slim.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.8/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
