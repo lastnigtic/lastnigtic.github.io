@@ -1,8 +1,5 @@
-User-agent: * Allow: /
-Allow: /archives/
-Disallow: /vendors/
-Disallow: /categories/
-
+User-agent: * 
+Allow: /
 
 Sitemap: http://lastnigtic.cn/sitemap.xml
 Sitemap: http://lastnigtic.cn/baidusitemap.xml
