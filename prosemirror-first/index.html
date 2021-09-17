@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="一、了解 prosemirrorprosemirorr本身并不是一个开箱即用的编辑器，而是通过一系列模块配合搭建起来的一个富文本编辑器，核心的模块主要有以下四个  prosemirror-model：负责 prosemirror 的内容结构。定义了编辑器的文档模型，用于描述编辑器内容的数据结构，并实现了对编辑器内容的一原子的操作。实现了一套索引系统，用于处理位置信息 。同时提供了从 DOM -&amp;">
+    <meta name="description" content="一、了解 prosemirrorprosemirror本身并不是一个开箱即用的编辑器，而是通过一系列模块配合搭建起来的一个富文本编辑器，核心的模块主要有以下四个  prosemirror-model：负责 prosemirror 的内容结构。定义了编辑器的文档模型，用于描述编辑器内容的数据结构，并实现了对编辑器内容的一原子的操作。实现了一套索引系统，用于处理位置信息 。同时提供了从 DOM -&amp;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="富文本编辑器Prosemirror - 入门">
 <meta property="og:url" content="http://lastnigtic.cn/prosemirror-first/index.html">
 <meta property="og:site_name" content="Blog of lastnigtic">
-<meta property="og:description" content="一、了解 prosemirrorprosemirorr本身并不是一个开箱即用的编辑器，而是通过一系列模块配合搭建起来的一个富文本编辑器，核心的模块主要有以下四个  prosemirror-model：负责 prosemirror 的内容结构。定义了编辑器的文档模型，用于描述编辑器内容的数据结构，并实现了对编辑器内容的一原子的操作。实现了一套索引系统，用于处理位置信息 。同时提供了从 DOM -&amp;">
+<meta property="og:description" content="一、了解 prosemirrorprosemirror本身并不是一个开箱即用的编辑器，而是通过一系列模块配合搭建起来的一个富文本编辑器，核心的模块主要有以下四个  prosemirror-model：负责 prosemirror 的内容结构。定义了编辑器的文档模型，用于描述编辑器内容的数据结构，并实现了对编辑器内容的一原子的操作。实现了一套索引系统，用于处理位置信息 。同时提供了从 DOM -&amp;">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d12b4119ace4bc395a258ffcc4e0b55~tplv-k3u1fbpfcp-zoom-1.image">
 <meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f6a29af1b3a74f7e9b6151a3019b2bcd~tplv-k3u1fbpfcp-zoom-1.image">
@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ec7bbb66c4be40c3b4d205cb0488d12f~tplv-k3u1fbpfcp-zoom-1.image">
 <meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c96985340b36435c8aa22088477f13d6~tplv-k3u1fbpfcp-zoom-1.image">
 <meta property="article:published_time" content="2020-08-08T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-06-27T14:45:55.683Z">
+<meta property="article:modified_time" content="2021-09-17T15:42:52.315Z">
 <meta property="article:author" content="lastnigtic">
 <meta property="article:tag" content="lastnigtic">
 <meta name="twitter:card" content="summary">
@@ -149,11 +149,11 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h2 id="一、了解-prosemirror"><a href="#一、了解-prosemirror" class="headerlink" title="一、了解 prosemirror"></a>一、了解 prosemirror</h2><p><a target="_blank" rel="noopener" href="https://prosemirror.net/">prosemirorr</a>本身并不是一个开箱即用的编辑器，而是通过一系列模块配合搭建起来的一个富文本编辑器，核心的模块主要有以下四个</p>
+    <h2 id="一、了解-prosemirror"><a href="#一、了解-prosemirror" class="headerlink" title="一、了解 prosemirror"></a>一、了解 prosemirror</h2><p><a target="_blank" rel="noopener" href="https://prosemirror.net/">prosemirror</a>本身并不是一个开箱即用的编辑器，而是通过一系列模块配合搭建起来的一个富文本编辑器，核心的模块主要有以下四个</p>
 <ul>
-<li><p><strong>prosemirror-model</strong>：负责 prosemirror 的内容结构。定义了编辑器的文档模型，用于描述编辑器内容的数据结构，并实现了对编辑器内容的一原子的操作。实现了一套索引系统，用于处理位置信息 。同时提供了从 DOM -&gt; ProsemirrNode 的 Parser 以及反向的 Serilizer。</p>
+<li><p><strong>prosemirror-model</strong>：负责 prosemirror 的内容结构。定义了编辑器的文档模型，用于描述编辑器内容的数据结构，并实现了对编辑器内容的一原子的操作。实现了一套索引系统，用于处理位置信息 。同时提供了从 DOM -&gt; ProsemirrorNode 的 Parser 以及反向的 Serializer。</p>
 </li>
-<li><p><strong>prosemirror-transfrom</strong>：负责对编辑内容的修改操作。文档的改动由 step 实现。transform 基于 step 封装了一系列对内容进行操作的 API。step 执行了对文档内容的操作，通过 StepMap 记录了改动的信息，可用于追溯位置的变化。</p>
+<li><p><strong>prosemirror-transform</strong>：负责对编辑内容的修改操作。文档的改动由 step 实现。transform 基于 step 封装了一系列对内容进行操作的 API。step 执行了对文档内容的操作，通过 StepMap 记录了改动的信息，可用于追溯位置的变化。</p>
 </li>
 <li><p><strong>prosemirror-state</strong>：负责描述整个编辑器的状态。包括文档内容，选区信息，所有的节点类型以及并基于 Transform 实现了 Transaction，Transaction 主要增加了对选区的管理以及状态记录。同时提供了强大的插件系统，实现用户对状态更新流程干预的可能性。</p>
 </li>
@@ -174,7 +174,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">paragraph: &#123;</span><br><span class="line">	group: <span class="string">&quot;block&quot;</span>,</span><br><span class="line">	content: <span class="string">&quot;text*&quot;</span>,</span><br><span class="line">	attrs: &#123;</span><br><span class="line">		align: &#123;</span><br><span class="line">			<span class="keyword">default</span>: <span class="string">&#x27;left&#x27;</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>如上定义了一个 attrs 中包含 align 的 paragraph 节点，可以用作单纯的信息存储，也可以配合 toDOM 修改渲染输出。</p>
-<h2 id="三、文档结构"><a href="#三、文档结构" class="headerlink" title="三、文档结构"></a>三、文档结构</h2><h3 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h3><p>prosemiror 的内容被描述成一棵树，他的特征属性（isBlock、isInline 等）由我们所定义的节点特征来确定</p>
+<h2 id="三、文档结构"><a href="#三、文档结构" class="headerlink" title="三、文档结构"></a>三、文档结构</h2><h3 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h3><p>prosemirror 的内容被描述成一棵树，他的特征属性（isBlock、isInline 等）由我们所定义的节点特征来确定</p>
 <p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d12b4119ace4bc395a258ffcc4e0b55~tplv-k3u1fbpfcp-zoom-1.image"></p>
 <p>Node 的 content 由一个 Fragment 表示，Fragment 的 content 则是由 Node 组成的数组，prosemirror 通过这样嵌套形成的树形结构来描述一个文档。</p>
 <h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><p>prosemirror 实现了一套索引系统用于表示文档中某个位置，主要分为两种：</p>
@@ -203,7 +203,7 @@
 <p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ec7bbb66c4be40c3b4d205cb0488d12f~tplv-k3u1fbpfcp-zoom-1.image"><br>这样就实现了对内容的替换！</p>
 <h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>所以从 prosemirror 的角度看，replaceRangeWith 做了什么操作呢？</p>
 <p>上面说到 transform 对文档的操作都是通过 step 去实现，所以这一步实际上创建了一个 ReplaceStep 去修改文档。</p>
-<p>step 对文档的修改不一定是成功的，结果由 StepResult 表示，如果失败了会抛出一个 TransformError，如果成功了，则会返回新的文档的内容，transform 会把旧文档内容保存在 docs 属性中，新的应用到 doc 属性中，并把 step 保存在 steps 属性中，可以实现撤销的操作。最后通过 distpach 更新到 state。</p>
+<p>step 对文档的修改不一定是成功的，结果由 StepResult 表示，如果失败了会抛出一个 TransformError，如果成功了，则会返回新的文档的内容，transform 会把旧文档内容保存在 docs 属性中，新的应用到 doc 属性中，并把 step 保存在 steps 属性中，可以实现撤销的操作。最后通过 dispatch 更新到 state。</p>
 <p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c96985340b36435c8aa22088477f13d6~tplv-k3u1fbpfcp-zoom-1.image"><br>因此，我们可以把 state.tr 可以看成是一个事务，每一个 step 可以看作是一次原子操作，通过 dispatch 提交事务并应用到 state 上生效，实现了对文档的修改。</p>
 <h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>通过上文，简单的介绍 prosemirror 的一些概念，API 使用以及文档更新的原理，可以看到 prosemirror 通过对数据的抽象，可以把文档的结构描述得很清晰。把对文档的操作封装得很好，隐藏了很多细节的东西，并提供了各种方便使用的 API。</p>
 <p>本文目前还只是停留在对 prosemirror 粗浅的介绍，诸如文档具体如何更新，视图是怎么去渲染的，用户行为是怎么捕获并分析……还有很多内容值得研究，后续会有一系列文章来介绍它们。</p>
