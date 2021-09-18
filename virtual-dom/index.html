@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang=en>
 <head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="本来打算看下 virtualDOM 的实现原理，但看到许多文章都只是在讲原理，很少有对 vDOM 库的源码的分析，今天打算尝试着从自己的角度出发，写一篇源码解析的文章 首先请出今天的主角——Vue2 的 vDOM 所基于的库，snabbdom，github 地址如下  GitHub: https:&#x2F;&#x2F;github.com&#x2F;snabbdom&#x2F;snabbdom   一、类型首先我们来看下他的类型定义">
+	<!-- so meta -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+	 <meta name="description" content="本来打算看下 virtualDOM 的实现原理，但看到许多文章都只是在讲原理，很少有对 vDOM 库的源码的分析，今天打算尝试着从自己的角度出发，写一篇源码解析的文章 首先请出今天的主角——Vue2 的 vDOM 所基于的库，snabbdom，github 地址如下  GitHub: https:&#x2F;&#x2F;github.com&#x2F;snabbdom&#x2F;snabbdom   一、类型首先我们来看下他的类型定义">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浅析Virtual DOM库 - snabbdom的源码以及 仿写一个自己的vDOM库">
 <meta property="og:url" content="http://lastnigtic.cn/virtual-dom/index.html">
@@ -22,35 +22,23 @@
 <meta property="article:tag" content="lastnigtic">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2019/7/1/16bacfe256ad2408?w=698&h=186&f=png&s=29191">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon.ico">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>浅析Virtual DOM库 - snabbdom的源码以及 仿写一个自己的vDOM库</title>
-    <!-- styles -->
-    
+	   
+	<link rel="shortcut icon" href="/images/favicon.ico" />
+	   
+	<link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192" />
+	   
+	<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+	  
+	<!-- title -->
+	<title>浅析Virtual DOM库 - snabbdom的源码以及 仿写一个自己的vDOM库</title>
+	<!-- styles -->
+	
 <link rel="stylesheet" href="/css/style.css">
 
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
+	<!-- persian styles -->
+	
+	<!-- rss -->
+	 
 	<!-- mathjax -->
 	
 <meta name="generator" content="Hexo 5.4.0"></head>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang=en>
 <head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="最近想了解一下 Vue 是怎么实现数据双向绑定的，了解到是基于 Object.definProperty,在此记录一下。 Object.defineProperty 　　顾名思义，就是给对象定义一个属性，总共有这么几种： value　　属性的值writable　　是否可改写，如果为 false，就为只读，不能重新赋值，和 const 差不多enumerable　　能否枚举，如果设置为 false">
+	<!-- so meta -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+	 <meta name="description" content="最近想了解一下 Vue 是怎么实现数据双向绑定的，了解到是基于 Object.definProperty,在此记录一下。 Object.defineProperty 　　顾名思义，就是给对象定义一个属性，总共有这么几种： value　　属性的值writable　　是否可改写，如果为 false，就为只读，不能重新赋值，和 const 差不多enumerable　　能否枚举，如果设置为 false">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Object.defineProperty 详解">
 <meta property="og:url" content="http://lastnigtic.cn/defineProperty/index.html">
@@ -21,35 +21,23 @@
 <meta property="article:tag" content="lastnigtic">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Object.defineProperty/0.png">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon.ico">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>Object.defineProperty 详解</title>
-    <!-- styles -->
-    
+	   
+	<link rel="shortcut icon" href="/images/favicon.ico" />
+	   
+	<link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192" />
+	   
+	<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+	  
+	<!-- title -->
+	<title>Object.defineProperty 详解</title>
+	<!-- styles -->
+	
 <link rel="stylesheet" href="/css/style.css">
 
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
+	<!-- persian styles -->
+	
+	<!-- rss -->
+	 
 	<!-- mathjax -->
 	
 <meta name="generator" content="Hexo 5.4.0"></head>

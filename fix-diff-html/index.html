@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<!-- so meta -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+	
+	<meta name="keywords" content="diff,match,patch,google,html,渲染" />
+	 <meta name="description" content="解析html，序列化成有意义的token对象。 修正不合法的html结构 根据规则，去除多余的内容  序列化 HTML序列化HTML有很多中形式：  根据空格，&lt;&gt;以及其他分割符，把HTML分割成一段段，如把&lt;div class&#x3D;&quot;test&quot;&gt;test&lt;&#x2F;div&gt;解析成[&#39;&lt;&#39;, &#39;div&#39;, &amp;#39">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用google的diff-match-patch对比html并渲染">
+<meta property="og:url" content="http://lastnigtic.cn/fix-diff-html/index.html">
+<meta property="og:site_name" content="Blog of lastnigtic">
+<meta property="og:description" content="解析html，序列化成有意义的token对象。 修正不合法的html结构 根据规则，去除多余的内容  序列化 HTML序列化HTML有很多中形式：  根据空格，&lt;&gt;以及其他分割符，把HTML分割成一段段，如把&lt;div class&#x3D;&quot;test&quot;&gt;test&lt;&#x2F;div&gt;解析成[&#39;&lt;&#39;, &#39;div&#39;, &amp;#39">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-09-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-09-17T16:39:17.710Z">
+<meta property="article:author" content="lastnigtic">
+<meta property="article:tag" content="lastnigtic">
+<meta name="twitter:card" content="summary">
+	   
+	<link rel="shortcut icon" href="/images/favicon.ico" />
+	   
+	<link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192" />
+	   
+	<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+	  
+	<!-- title -->
+	<title>用google的diff-match-patch对比html并渲染</title>
+	<!-- styles -->
+	
+<link rel="stylesheet" href="/css/style.css">
+
+	<!-- persian styles -->
+	
+	<!-- rss -->
+	 
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/prosemirror-state-to-dom/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/fix-diff-html/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/fix-diff-html/&text=用google的diff-match-patch对比html并渲染"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/fix-diff-html/&title=用google的diff-match-patch对比html并渲染"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/fix-diff-html/&is_video=false&description=用google的diff-match-patch对比html并渲染"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=用google的diff-match-patch对比html并渲染&body=Check out this article: http://lastnigtic.cn/fix-diff-html/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/fix-diff-html/&title=用google的diff-match-patch对比html并渲染"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/fix-diff-html/&title=用google的diff-match-patch对比html并渲染"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/fix-diff-html/&title=用google的diff-match-patch对比html并渲染"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/fix-diff-html/&title=用google的diff-match-patch对比html并渲染"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/fix-diff-html/&name=用google的diff-match-patch对比html并渲染&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/fix-diff-html/&t=用google的diff-match-patch对比html并渲染"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96-HTML"><span class="toc-number">1.</span> <span class="toc-text">序列化 HTML</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        用google的diff-match-patch对比html并渲染
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lastnigtic</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-09-16T16:00:00.000Z" itemprop="datePublished">2021-09-17</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <ol>
+<li>解析<code>html</code>，序列化成有意义的<code>token</code>对象。</li>
+<li>修正不合法的<code>html</code>结构</li>
+<li>根据规则，去除多余的内容</li>
+</ol>
+<h2 id="序列化-HTML"><a href="#序列化-HTML" class="headerlink" title="序列化 HTML"></a>序列化 HTML</h2><p>序列化<code>HTML</code>有很多中形式：</p>
+<ol>
+<li>根据空格，<code>&lt;&gt;</code>以及其他分割符，把<code>HTML</code>分割成一段段，如把<code>&lt;div class=&quot;test&quot;&gt;test&lt;/div&gt;</code>解析成<code>[&#39;&lt;&#39;, &#39;div&#39;, &#39;class=&quot;test&quot;&#39;, &#39;&gt;&#39;, &#39;test&#39;, &#39;&lt;&#39;, &#39;/div&#39;, &#39;&gt;&#39;]</code>这类结构。</li>
+<li>也可以把信息都完整解析出来，如类型，内容，层级关系等，类似<code>DOM</code>树，如上面这个例子可以解析成:</li>
+</ol>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="keyword">type</span>: <span class="string">&#x27;dom&#x27;</span>,</span><br><span class="line">  name: <span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">  attribute: &#123;</span><br><span class="line">    class: &#x27;test&#x27;</span><br><span class="line">  &#125;,</span><br><span class="line">  children: [&#123;</span><br><span class="line">    <span class="keyword">type</span>: <span class="string">&#x27;content&#x27;</span>,</span><br><span class="line">    name: <span class="string">&#x27;text&#x27;</span>,</span><br><span class="line">    content: <span class="string">&#x27;test&#x27;</span></span><br><span class="line">  &#125;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面这两种都是可行的解析方法，但针对我们的需求来说，第一种优点是比较简单，容易实现，缺点也比较明显，单单拿到其中某一个<code>token</code>，并不能判断出他是属于到底是内容，还是属性。第二种则是多了很多不必要的信息，如层级关系，标签属性顺序等，且跨层级的操作很不方便，对于不符合要求的标签, 如<code>&lt;p&lt;ins&gt;&gt;</code>， 很难体现出来。</p>
+<p>综上所述，我们需要的结构是既能区分出类型，又是扁平的结构，类似</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123; type: &#39;tag&#39;, content: &#39;&lt;&#39; &#125;,</span><br><span class="line">  &#123; type: &#39;tagName&#39;, content: &#39;div&#39; &#125;,</span><br><span class="line">  &#123; type: &#39;attribute&#39;, content: &#39; class&#x3D;&quot;test&quot;&#39;&#125;,</span><br><span class="line">  &#123; type: &#39;content&#39;, content: &#39;test&#39;&#125;,</span><br><span class="line">  &#123; type: &#39;tag&#39;, content: &#39;&lt;&#39; &#125;,</span><br><span class="line">  &#123; type: &#39;tagName&#39;, content: &#39;&#x2F;div&#39; &#125;,</span><br><span class="line">  &#123; type: &#39;tag&#39;, content: &#39;&gt;&#39; &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96-HTML"><span class="toc-number">1.</span> <span class="toc-text">序列化 HTML</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/fix-diff-html/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/fix-diff-html/&text=用google的diff-match-patch对比html并渲染"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/fix-diff-html/&title=用google的diff-match-patch对比html并渲染"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/fix-diff-html/&is_video=false&description=用google的diff-match-patch对比html并渲染"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=用google的diff-match-patch对比html并渲染&body=Check out this article: http://lastnigtic.cn/fix-diff-html/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/fix-diff-html/&title=用google的diff-match-patch对比html并渲染"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/fix-diff-html/&title=用google的diff-match-patch对比html并渲染"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/fix-diff-html/&title=用google的diff-match-patch对比html并渲染"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/fix-diff-html/&title=用google的diff-match-patch对比html并渲染"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/fix-diff-html/&name=用google的diff-match-patch对比html并渲染&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/fix-diff-html/&t=用google的diff-match-patch对比html并渲染"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2017-2021
+    lastnigtic
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.staticfile.org/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.slim.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.8/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

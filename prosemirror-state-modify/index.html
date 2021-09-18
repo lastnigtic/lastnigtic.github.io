@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang=en>
 <head>
-    <!-- so meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="上一篇文章上讲到了 prosemirror 是如何把 state 的状态渲染到 DOM 视图的，这一篇文章来分析一下用户的编辑操作是怎么去修改 state 的。 一、prosemirror-stateprosemirror-state是prosemirror用于描述整篇文档状态的数据结构，它主要包括以下几个属性； docdoc就是当前整篇文档的数据内容，doc是一个Node类型元素，Node可以理">
+	<!-- so meta -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+	
+	<meta name="keywords" content="Prosemirror,编辑器,prosemirror-state,原理,dispatch" />
+	 <meta name="description" content="上一篇文章上讲到了 prosemirror 是如何把 state 的状态渲染到 DOM 视图的，这一篇文章来分析一下用户的编辑操作是怎么去修改 state 的。 一、prosemirror-stateprosemirror-state是prosemirror用于描述整篇文档状态的数据结构，它主要包括以下几个属性； docdoc就是当前整篇文档的数据内容，doc是一个Node类型元素，Node可以理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="富文本编辑框架Prosemirror - 如何对state进行修改">
 <meta property="og:url" content="http://lastnigtic.cn/prosemirror-state-modify/index.html">
@@ -22,35 +24,23 @@
 <meta property="article:tag" content="lastnigtic">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://lastnigtic.cn/prosemirror-state-modify/list-dom.png">
-    
-    
-      
-        
-          <link rel="shortcut icon" href="/images/favicon.ico">
-        
-      
-      
-        
-          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
-        
-      
-      
-        
-          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-        
-      
-    
-    <!-- title -->
-    <title>富文本编辑框架Prosemirror - 如何对state进行修改</title>
-    <!-- styles -->
-    
+	   
+	<link rel="shortcut icon" href="/images/favicon.ico" />
+	   
+	<link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192" />
+	   
+	<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+	  
+	<!-- title -->
+	<title>富文本编辑框架Prosemirror - 如何对state进行修改</title>
+	<!-- styles -->
+	
 <link rel="stylesheet" href="/css/style.css">
 
-    <!-- persian styles -->
-    
-    <!-- rss -->
-    
-    
+	<!-- persian styles -->
+	
+	<!-- rss -->
+	 
 	<!-- mathjax -->
 	
 <meta name="generator" content="Hexo 5.4.0"></head>
