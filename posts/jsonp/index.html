@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<!-- so meta -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+	 <meta name="description" content="一、开始首先我们要明确 JSON 和 JSONP 的区别  JSON：JSON 是一种基于文本的数据交换方式，或者叫做数据描述格式 JSONP：是 JSON 的一种“使用模式”，可用于解决主流浏览器的跨域数据访问的问题两者不是同一个概念，JSONP 就是利用 src 属性的跨域能力来实现跨域通讯。  二、模拟 我们来实现 html 的代码，其实就是写个回调的方法，以及 script 标签  123">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nodejs实现JSONP跨域请求">
+<meta property="og:url" content="http://lastnigtic.cn/posts/jsonp/index.html">
+<meta property="og:site_name" content="Blog of lastnigtic">
+<meta property="og:description" content="一、开始首先我们要明确 JSON 和 JSONP 的区别  JSON：JSON 是一种基于文本的数据交换方式，或者叫做数据描述格式 JSONP：是 JSON 的一种“使用模式”，可用于解决主流浏览器的跨域数据访问的问题两者不是同一个概念，JSONP 就是利用 src 属性的跨域能力来实现跨域通讯。  二、模拟 我们来实现 html 的代码，其实就是写个回调的方法，以及 script 标签  123">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-09-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-05-01T15:41:17.271Z">
+<meta property="article:author" content="lastnigtic">
+<meta property="article:tag" content="lastnigtic">
+<meta name="twitter:card" content="summary">
+	   
+	<link rel="shortcut icon" href="/images/favicon.ico" />
+	   
+	<link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192" />
+	   
+	<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+	  
+	<!-- title -->
+	<title>nodejs实现JSONP跨域请求</title>
+	<!-- styles -->
+	
+<link rel="stylesheet" href="/css/style.css">
+
+	<!-- persian styles -->
+	
+	<!-- rss -->
+	 
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/posts/extend/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/posts/ES6-set-map/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/posts/jsonp/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/posts/jsonp/&text=nodejs实现JSONP跨域请求"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/posts/jsonp/&title=nodejs实现JSONP跨域请求"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/posts/jsonp/&is_video=false&description=nodejs实现JSONP跨域请求"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=nodejs实现JSONP跨域请求&body=Check out this article: http://lastnigtic.cn/posts/jsonp/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/posts/jsonp/&title=nodejs实现JSONP跨域请求"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/posts/jsonp/&title=nodejs实现JSONP跨域请求"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/posts/jsonp/&title=nodejs实现JSONP跨域请求"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/posts/jsonp/&title=nodejs实现JSONP跨域请求"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/posts/jsonp/&name=nodejs实现JSONP跨域请求&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/posts/jsonp/&t=nodejs实现JSONP跨域请求"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%BC%80%E5%A7%8B"><span class="toc-number">1.</span> <span class="toc-text">一、开始</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A8%A1%E6%8B%9F"><span class="toc-number">2.</span> <span class="toc-text">二、模拟</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        nodejs实现JSONP跨域请求
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lastnigtic</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-09-23T16:00:00.000Z" itemprop="datePublished">2017-09-24</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="一、开始"><a href="#一、开始" class="headerlink" title="一、开始"></a>一、开始</h2><p>首先我们要明确 JSON 和 JSONP 的区别</p>
+<ul>
+<li>JSON：JSON 是一种基于文本的数据交换方式，或者叫做数据描述格式</li>
+<li>JSONP：是 JSON 的一种“使用模式”，可用于解决主流浏览器的跨域数据访问的问题<br>两者不是同一个概念，JSONP 就是利用 src 属性的跨域能力来实现跨域通讯。</li>
+</ul>
+<h2 id="二、模拟"><a href="#二、模拟" class="headerlink" title="二、模拟"></a>二、模拟</h2><ul>
+<li>我们来实现 html 的代码，其实就是写个回调的方法，以及 script 标签</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">        &lt;title&gt;jsonp&lt;&#x2F;title&gt;</span><br><span class="line">        &lt;meta http-equiv&#x3D;&quot;Content-Type&quot; content&#x3D;&quot;text&#x2F;html; charset&#x3D;utf-8&quot;&#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;head&gt;</span><br><span class="line">    &lt;body&gt;</span><br><span class="line">        &lt;script&gt;</span><br><span class="line">            function test(data)&#123;</span><br><span class="line">                alert(data.name);</span><br><span class="line">            &#125;;</span><br><span class="line">        &lt;&#x2F;script&gt;</span><br><span class="line">        &lt;script src&#x3D;&quot;http:&#x2F;&#x2F;localhost:8080&#x2F;jsonp?callback&#x3D;test&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">    &lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>之后就是我们 node 端的代码</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">var http &#x3D; require(&#39;http&#39;)</span><br><span class="line">var url &#x3D; require(&#39;url&#39;)</span><br><span class="line">var querystring &#x3D; require(&#39;querystring&#39;)</span><br><span class="line">const PORT &#x3D; 8080；</span><br><span class="line">var server &#x3D; http.createServer();</span><br><span class="line">&#x2F;&#x2F;通过request事件来响应request请求</span><br><span class="line">server.on(&#39;request&#39;,function(req, res)&#123;</span><br><span class="line">    var urlPath &#x3D; url.parse(req.url).pathname;</span><br><span class="line">    var qs &#x3D; querystring.parse(req.url.split(&#39;?&#39;)[1]); &#x2F;&#x2F; 把query参数解析成对象</span><br><span class="line">    &#x2F;&#x2F; 我们规定如果path是&#39;&#x2F;jsonp&#39;就是jsonp请求</span><br><span class="line">    if(urlPath &#x3D;&#x3D;&#x3D; &#39;&#x2F;jsonp&#39; &amp;&amp; qs.callback)&#123;</span><br><span class="line">        res.writeHead(200,&#123;&#39;Content-Type&#39;:&#39;application&#x2F;json;charset&#x3D;utf-8&#39;&#125;);</span><br><span class="line">        var data &#x3D; &#123;</span><br><span class="line">            &quot;name&quot;: &quot;lastnigtic&quot;</span><br><span class="line">        &#125;;</span><br><span class="line">        &#x2F;&#x2F; 相当于是在写一段js代码</span><br><span class="line">        data &#x3D; JSON.stringify(data);</span><br><span class="line">        var callback &#x3D; qs.callback+&#39;(&#39;+data+&#39;);&#39;;</span><br><span class="line">        res.end(callback);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">server.listen(PORT, () &#x3D;&gt; &#123;</span><br><span class="line">    console.log(&#39;listening at Port &#39; + PORT)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>到了这一步，只要启动服务器，就可以实现我们的跨域请求数据了！</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%BC%80%E5%A7%8B"><span class="toc-number">1.</span> <span class="toc-text">一、开始</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A8%A1%E6%8B%9F"><span class="toc-number">2.</span> <span class="toc-text">二、模拟</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/posts/jsonp/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/posts/jsonp/&text=nodejs实现JSONP跨域请求"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/posts/jsonp/&title=nodejs实现JSONP跨域请求"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/posts/jsonp/&is_video=false&description=nodejs实现JSONP跨域请求"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=nodejs实现JSONP跨域请求&body=Check out this article: http://lastnigtic.cn/posts/jsonp/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/posts/jsonp/&title=nodejs实现JSONP跨域请求"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/posts/jsonp/&title=nodejs实现JSONP跨域请求"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/posts/jsonp/&title=nodejs实现JSONP跨域请求"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/posts/jsonp/&title=nodejs实现JSONP跨域请求"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/posts/jsonp/&name=nodejs实现JSONP跨域请求&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/posts/jsonp/&t=nodejs实现JSONP跨域请求"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2017-2022
+    lastnigtic
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.staticfile.org/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.slim.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.8/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<!-- so meta -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+	
+	<meta name="keywords" content="Prosemirror,编辑器,入门,教程,demo" />
+	 <meta name="description" content="一、了解 prosemirrorprosemirror本身并不是一个开箱即用的编辑器，而是通过一系列模块配合搭建起来的一个富文本编辑器，核心的模块主要有以下四个  prosemirror-model：负责 prosemirror 的内容结构。定义了编辑器的文档模型，用于描述编辑器内容的数据结构，并实现了对编辑器内容的一原子的操作。实现了一套索引系统，用于处理位置信息 。同时提供了从 DOM -&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="富文本编辑器Prosemirror - 入门">
+<meta property="og:url" content="http://lastnigtic.cn/posts/prosemirror-first/index.html">
+<meta property="og:site_name" content="Blog of lastnigtic">
+<meta property="og:description" content="一、了解 prosemirrorprosemirror本身并不是一个开箱即用的编辑器，而是通过一系列模块配合搭建起来的一个富文本编辑器，核心的模块主要有以下四个  prosemirror-model：负责 prosemirror 的内容结构。定义了编辑器的文档模型，用于描述编辑器内容的数据结构，并实现了对编辑器内容的一原子的操作。实现了一套索引系统，用于处理位置信息 。同时提供了从 DOM -&amp;">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d12b4119ace4bc395a258ffcc4e0b55~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f6a29af1b3a74f7e9b6151a3019b2bcd~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b10ac823f9b64fb9b62ae27faa4ffdee~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ce50c46ec9c247d99f95f4ecd9ed7ae4~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/19e7b466bcfc45d0a9709873641a921c~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ec7bbb66c4be40c3b4d205cb0488d12f~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c96985340b36435c8aa22088477f13d6~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="article:published_time" content="2020-08-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-09-17T15:42:52.315Z">
+<meta property="article:author" content="lastnigtic">
+<meta property="article:tag" content="lastnigtic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d12b4119ace4bc395a258ffcc4e0b55~tplv-k3u1fbpfcp-zoom-1.image">
+	   
+	<link rel="shortcut icon" href="/images/favicon.ico" />
+	   
+	<link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192" />
+	   
+	<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+	  
+	<!-- title -->
+	<title>富文本编辑器Prosemirror - 入门</title>
+	<!-- styles -->
+	
+<link rel="stylesheet" href="/css/style.css">
+
+	<!-- persian styles -->
+	
+	<!-- rss -->
+	 
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/posts/prosemirror-state-modify/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/posts/input-caret/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/posts/prosemirror-first/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/posts/prosemirror-first/&text=富文本编辑器Prosemirror - 入门"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/posts/prosemirror-first/&title=富文本编辑器Prosemirror - 入门"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/posts/prosemirror-first/&is_video=false&description=富文本编辑器Prosemirror - 入门"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=富文本编辑器Prosemirror - 入门&body=Check out this article: http://lastnigtic.cn/posts/prosemirror-first/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/posts/prosemirror-first/&title=富文本编辑器Prosemirror - 入门"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/posts/prosemirror-first/&title=富文本编辑器Prosemirror - 入门"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/posts/prosemirror-first/&title=富文本编辑器Prosemirror - 入门"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/posts/prosemirror-first/&title=富文本编辑器Prosemirror - 入门"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/posts/prosemirror-first/&name=富文本编辑器Prosemirror - 入门&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/posts/prosemirror-first/&t=富文本编辑器Prosemirror - 入门"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BA%86%E8%A7%A3-prosemirror"><span class="toc-number">1.</span> <span class="toc-text">一、了解 prosemirror</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%8A%82%E7%82%B9%E5%AE%9A%E4%B9%89"><span class="toc-number">2.</span> <span class="toc-text">二、节点定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Node"><span class="toc-number">2.1.</span> <span class="toc-text">Node</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mark"><span class="toc-number">2.2.</span> <span class="toc-text">Mark</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Attributes"><span class="toc-number">2.3.</span> <span class="toc-text">Attributes</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%96%87%E6%A1%A3%E7%BB%93%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">三、文档结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AE%B9"><span class="toc-number">3.1.</span> <span class="toc-text">内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95"><span class="toc-number">3.2.</span> <span class="toc-text">索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E6%96%87%E6%A1%A3"><span class="toc-number">4.</span> <span class="toc-text">四、如何修改文档</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">4.1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.2.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">4.3.</span> <span class="toc-text">原理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">五、总结</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        富文本编辑器Prosemirror - 入门
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lastnigtic</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-08-08T16:00:00.000Z" itemprop="datePublished">2020-08-09</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="一、了解-prosemirror"><a href="#一、了解-prosemirror" class="headerlink" title="一、了解 prosemirror"></a>一、了解 prosemirror</h2><p><a target="_blank" rel="noopener" href="https://prosemirror.net/">prosemirror</a>本身并不是一个开箱即用的编辑器，而是通过一系列模块配合搭建起来的一个富文本编辑器，核心的模块主要有以下四个</p>
+<ul>
+<li><p><strong>prosemirror-model</strong>：负责 prosemirror 的内容结构。定义了编辑器的文档模型，用于描述编辑器内容的数据结构，并实现了对编辑器内容的一原子的操作。实现了一套索引系统，用于处理位置信息 。同时提供了从 DOM -&gt; ProsemirrorNode 的 Parser 以及反向的 Serializer。</p>
+</li>
+<li><p><strong>prosemirror-transform</strong>：负责对编辑内容的修改操作。文档的改动由 step 实现。transform 基于 step 封装了一系列对内容进行操作的 API。step 执行了对文档内容的操作，通过 StepMap 记录了改动的信息，可用于追溯位置的变化。</p>
+</li>
+<li><p><strong>prosemirror-state</strong>：负责描述整个编辑器的状态。包括文档内容，选区信息，所有的节点类型以及并基于 Transform 实现了 Transaction，Transaction 主要增加了对选区的管理以及状态记录。同时提供了强大的插件系统，实现用户对状态更新流程干预的可能性。</p>
+</li>
+<li><p><strong>prosemirror-view</strong>：负责视图的渲染，实现了从 state 到视图的渲染。监听或者劫持用户的操作并修正，并创建相应的对 state 的改动，最终比对 dom 与 state 的决定最终渲染结果。</p>
+</li>
+</ul>
+<p>这四个模块实现了 prosemirror 的核心功能，但诸如什么按键有什么行为的规定，都需要由使用方自己实现，好在官方提供了 prosemirror-commands、prosemirror-history、prosemirror-keymap 等库来帮助我们更方便地去实现一个编辑器。</p>
+<h2 id="二、节点定义"><a href="#二、节点定义" class="headerlink" title="二、节点定义"></a>二、节点定义</h2><p>prosemirror 中渲染出的节点必须在 Schema 中有相应的定义，而 Scheme 中的可以定义的节点分为两种，<code>node</code>和<code>mark</code>，</p>
+<h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>node 即为常规意义上的节点，分为块级或者是行内。我们可以定义一个节点在 prosemirror 中表现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">paragraph: &#123;</span><br><span class="line">	group: <span class="string">&quot;block&quot;</span>,</span><br><span class="line">	content: <span class="string">&quot;text*&quot;</span>,</span><br><span class="line">	parseDOM: [&#123;<span class="attr">tag</span>: <span class="string">&#x27;p&#x27;</span>&#125;],</span><br><span class="line">    <span class="function"><span class="title">toDOM</span>(<span class="params">node</span>)</span> &#123; <span class="keyword">return</span> [<span class="string">&#x27;p&#x27;</span>, <span class="number">0</span>] &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上述定义了’paragraph’节点：group 表示其为 block 组；content 表示其可以包含任意文字；parseDOM 表示其解析<code>&lt;p&gt;xxx&lt;/p&gt;</code>；toDOM 表示其渲染为<code>&lt;p&gt;xxx&lt;/p&gt;</code>，子节点从 0 的位置开始插入，更多的配置可以查看<a target="_blank" rel="noopener" href="https://prosemirror.net/docs/ref/#model.NodeSpec">NodeSpec</a>，content 是一个类正则字符串，可以使用 node 的名称或者是 group 名。</p>
+<h3 id="Mark"><a href="#Mark" class="headerlink" title="Mark"></a>Mark</h3><p>Mark 是一种比较特殊的 Schema 类型，他的表现不同于 Node，Mark 主要作用于行内节点，用于给行内元素增加样式或者附加其他信息，他不像 Node 会占据文档位置，更像是一种对文档描述的补充。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bold: &#123;</span><br><span class="line">	parseDOM: [&#123;<span class="attr">tag</span>: <span class="string">&#x27;strong&#x27;</span>&#125;],</span><br><span class="line">    <span class="function"><span class="title">toDOM</span>(<span class="params">node</span>)</span> &#123; <span class="keyword">return</span> [<span class="string">&#x27;strong&#x27;</span>, <span class="number">0</span>]&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上定义 bold 类型的 Mark，解析以及渲染时候的 DOM。更多定义参考：<a target="_blank" rel="noopener" href="https://prosemirror.net/docs/ref/#model.MarkSpec">MarkSpec</a></p>
+<h3 id="Attributes"><a href="#Attributes" class="headerlink" title="Attributes"></a>Attributes</h3><p>Node 以及 Mark 都可以附加一些信息，但需要在初始化是定义好支持的属性</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">paragraph: &#123;</span><br><span class="line">	group: <span class="string">&quot;block&quot;</span>,</span><br><span class="line">	content: <span class="string">&quot;text*&quot;</span>,</span><br><span class="line">	attrs: &#123;</span><br><span class="line">		align: &#123;</span><br><span class="line">			<span class="keyword">default</span>: <span class="string">&#x27;left&#x27;</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上定义了一个 attrs 中包含 align 的 paragraph 节点，可以用作单纯的信息存储，也可以配合 toDOM 修改渲染输出。</p>
+<h2 id="三、文档结构"><a href="#三、文档结构" class="headerlink" title="三、文档结构"></a>三、文档结构</h2><h3 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h3><p>prosemirror 的内容被描述成一棵树，他的特征属性（isBlock、isInline 等）由我们所定义的节点特征来确定</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d12b4119ace4bc395a258ffcc4e0b55~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p>Node 的 content 由一个 Fragment 表示，Fragment 的 content 则是由 Node 组成的数组，prosemirror 通过这样嵌套形成的树形结构来描述一个文档。</p>
+<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><p>prosemirror 实现了一套索引系统用于表示文档中某个位置，主要分为两种：</p>
+<p>第一种是比较像是访问 DOM，利用 content 的数组的特性去访问节点，把文档当成一棵树去遍历。</p>
+<p>第二种是强大的索引系统，把文档打平后的索引，prosemirror 文档中的任何位置，都可以用一个唯一的整数表示。</p>
+<p>对于正常的 DOM，它是树形的结构</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f6a29af1b3a74f7e9b6151a3019b2bcd~tplv-k3u1fbpfcp-zoom-1.image"><br>在 prosemirror 的索引系统中，把这棵树打平了，规定：</p>
+<ul>
+<li>整个文档的第一个节点前的位置为零。</li>
+<li>进入或离开不是叶节点（即可以包含其他内容）的节点视为一个 token。因此，如果文档以一个段落开头，则该段落的内容开头算作位置 1。</li>
+<li>文本节点中的每个内容都使做是一个 token。</li>
+<li>叶子节点（不能包含其他节点内容）也视作是一个 token。</li>
+</ul>
+<p>按照这个规则，想象我们有一个指针，从开头 0 开始进入一个节点时索引加 1，每越过一个文本内容加 1，退出一个节点时也加 1，通过这样的形式，就可以描述文档中的每个位置。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b10ac823f9b64fb9b62ae27faa4ffdee~tplv-k3u1fbpfcp-zoom-1.image"><br>如上所示，nodeSize 可以理解为我们的指针从进入到退出节点时走过的距离，所以对应<code>&lt;p&gt;</code>的 nodeSize 为 5，<code>&lt;blockquote&gt;</code>的 nodeSize 为 8，通过这样的方式，我们就可以描述每个节点的位置以及大小。prosemirror 中的很多操作都需要使用到这些信息。</p>
+<h2 id="四、如何修改文档"><a href="#四、如何修改文档" class="headerlink" title="四、如何修改文档"></a>四、如何修改文档</h2><p>了解了上面的内容之后，我们对 prosemirror 的文档结构有了一个大致的认识，下一步我们来尝试修改文档的数据。我们来把官网的内容替换成 Hello Prosemirror！。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ce50c46ec9c247d99f95f4ecd9ed7ae4~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>根据上面的分析，我们要做的可以是修改 doc 的 content 属性或者是直接修改文字内容亦或是删除内容后再插入，我们选择第一种方式来实现。</p>
+<p>prosemirror 中的数据更新实际上都是对 state 的修改，通过 state 提供的 updateState 的 API 接受一个新的 state 来更新 state，编辑器实例 view 中帮我封装好了这一步操作，对外暴露出来的 API 是 dispatch。</p>
+<p>上面我们说到修改文档的操作是由<strong>prosemirror-transform</strong>来实现的，而<strong>prosemirror-state</strong>中的<strong>tr</strong>属性继承了 transform，state 又是作为<strong>prosemirror-view</strong>实例的一个属性。</p>
+<p>所以更新操作都可以通过 view 来实现，翻阅<a target="_blank" rel="noopener" href="https://prosemirror.net/docs/ref/">API 文档</a>，看到<a target="_blank" rel="noopener" href="https://prosemirror.net/docs/ref/#transform.Transform.replaceRangeWith">replaceRangeWith</a>这个 API 符合我们的需求，</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/19e7b466bcfc45d0a9709873641a921c~tplv-k3u1fbpfcp-zoom-1.image"><br>from 和 to 就是上文介绍到的索引数字，代表替换的位置，node 即为新的节点，对目前的操作来说，替换的起点 from 为起始位置 0，替换结束的位置为内容终点即为 doc 的 content 的大小，node 则可以通过 schema 创建。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>根据上面的分析，实现节点替换的操作为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; dispatch, state &#125; = view;</span><br><span class="line"><span class="keyword">const</span> &#123; schema, tr, doc &#125; = state;</span><br><span class="line"><span class="keyword">const</span> &#123; paragraph &#125; = schema.nodes;</span><br><span class="line"><span class="keyword">const</span> textNode = schema.text(<span class="string">&#x27;Hello Prosemirror!&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> newParagraph = paragraph.create(<span class="literal">undefined</span>, textNode);</span><br><span class="line">dispatch(tr.replaceRangeWith(<span class="number">0</span>, doc.content.size, newParagraph));</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ec7bbb66c4be40c3b4d205cb0488d12f~tplv-k3u1fbpfcp-zoom-1.image"><br>这样就实现了对内容的替换！</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>所以从 prosemirror 的角度看，replaceRangeWith 做了什么操作呢？</p>
+<p>上面说到 transform 对文档的操作都是通过 step 去实现，所以这一步实际上创建了一个 ReplaceStep 去修改文档。</p>
+<p>step 对文档的修改不一定是成功的，结果由 StepResult 表示，如果失败了会抛出一个 TransformError，如果成功了，则会返回新的文档的内容，transform 会把旧文档内容保存在 docs 属性中，新的应用到 doc 属性中，并把 step 保存在 steps 属性中，可以实现撤销的操作。最后通过 dispatch 更新到 state。</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c96985340b36435c8aa22088477f13d6~tplv-k3u1fbpfcp-zoom-1.image"><br>因此，我们可以把 state.tr 可以看成是一个事务，每一个 step 可以看作是一次原子操作，通过 dispatch 提交事务并应用到 state 上生效，实现了对文档的修改。</p>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>通过上文，简单的介绍 prosemirror 的一些概念，API 使用以及文档更新的原理，可以看到 prosemirror 通过对数据的抽象，可以把文档的结构描述得很清晰。把对文档的操作封装得很好，隐藏了很多细节的东西，并提供了各种方便使用的 API。</p>
+<p>本文目前还只是停留在对 prosemirror 粗浅的介绍，诸如文档具体如何更新，视图是怎么去渲染的，用户行为是怎么捕获并分析……还有很多内容值得研究，后续会有一系列文章来介绍它们。</p>
+<blockquote>
+<p>欢迎指出错误或提出问题，互相交流，共同发展 😁</p>
+</blockquote>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BA%86%E8%A7%A3-prosemirror"><span class="toc-number">1.</span> <span class="toc-text">一、了解 prosemirror</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%8A%82%E7%82%B9%E5%AE%9A%E4%B9%89"><span class="toc-number">2.</span> <span class="toc-text">二、节点定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Node"><span class="toc-number">2.1.</span> <span class="toc-text">Node</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mark"><span class="toc-number">2.2.</span> <span class="toc-text">Mark</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Attributes"><span class="toc-number">2.3.</span> <span class="toc-text">Attributes</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%96%87%E6%A1%A3%E7%BB%93%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">三、文档结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AE%B9"><span class="toc-number">3.1.</span> <span class="toc-text">内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95"><span class="toc-number">3.2.</span> <span class="toc-text">索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E6%96%87%E6%A1%A3"><span class="toc-number">4.</span> <span class="toc-text">四、如何修改文档</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">4.1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.2.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">4.3.</span> <span class="toc-text">原理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">五、总结</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/posts/prosemirror-first/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/posts/prosemirror-first/&text=富文本编辑器Prosemirror - 入门"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/posts/prosemirror-first/&title=富文本编辑器Prosemirror - 入门"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/posts/prosemirror-first/&is_video=false&description=富文本编辑器Prosemirror - 入门"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=富文本编辑器Prosemirror - 入门&body=Check out this article: http://lastnigtic.cn/posts/prosemirror-first/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/posts/prosemirror-first/&title=富文本编辑器Prosemirror - 入门"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/posts/prosemirror-first/&title=富文本编辑器Prosemirror - 入门"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/posts/prosemirror-first/&title=富文本编辑器Prosemirror - 入门"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/posts/prosemirror-first/&title=富文本编辑器Prosemirror - 入门"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/posts/prosemirror-first/&name=富文本编辑器Prosemirror - 入门&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/posts/prosemirror-first/&t=富文本编辑器Prosemirror - 入门"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2017-2022
+    lastnigtic
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.staticfile.org/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.slim.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.8/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

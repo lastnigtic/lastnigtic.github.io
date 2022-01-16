@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<!-- so meta -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+	 <meta name="description" content="一、原理如果使用 Object.defineProperty,实现一个最简单的双向绑定其实很简单，只需如下： 123456789var Vue &#x3D; &amp;#123;&amp;#125;;Object.defineProperty(Vue,&#39;$data&#39;,&amp;#123;    set(val)&amp;#123;        document.getElementById(&#39;vue-i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="模拟Vue 中数据双向绑定">
+<meta property="og:url" content="http://lastnigtic.cn/posts/vue-data/index.html">
+<meta property="og:site_name" content="Blog of lastnigtic">
+<meta property="og:description" content="一、原理如果使用 Object.defineProperty,实现一个最简单的双向绑定其实很简单，只需如下： 123456789var Vue &#x3D; &amp;#123;&amp;#125;;Object.defineProperty(Vue,&#39;$data&#39;,&amp;#123;    set(val)&amp;#123;        document.getElementById(&#39;vue-i">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-data/vue-0.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-data/1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-data/vue-1.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-data/new-Vue.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-data/new-Vue-input.png">
+<meta property="article:published_time" content="2017-05-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-05-01T15:42:41.693Z">
+<meta property="article:author" content="lastnigtic">
+<meta property="article:tag" content="lastnigtic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-data/vue-0.gif">
+	   
+	<link rel="shortcut icon" href="/images/favicon.ico" />
+	   
+	<link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192" />
+	   
+	<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+	  
+	<!-- title -->
+	<title>模拟Vue 中数据双向绑定</title>
+	<!-- styles -->
+	
+<link rel="stylesheet" href="/css/style.css">
+
+	<!-- persian styles -->
+	
+	<!-- rss -->
+	 
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post " href="/posts/vue-communication/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/posts/vue-vuex/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/posts/vue-data/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/posts/vue-data/&text=模拟Vue 中数据双向绑定"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/posts/vue-data/&title=模拟Vue 中数据双向绑定"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/posts/vue-data/&is_video=false&description=模拟Vue 中数据双向绑定"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=模拟Vue 中数据双向绑定&body=Check out this article: http://lastnigtic.cn/posts/vue-data/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/posts/vue-data/&title=模拟Vue 中数据双向绑定"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/posts/vue-data/&title=模拟Vue 中数据双向绑定"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/posts/vue-data/&title=模拟Vue 中数据双向绑定"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/posts/vue-data/&title=模拟Vue 中数据双向绑定"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/posts/vue-data/&name=模拟Vue 中数据双向绑定&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/posts/vue-data/&t=模拟Vue 中数据双向绑定"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">一、原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%9B%BF%E6%8D%A2%E5%85%83%E7%B4%A0"><span class="toc-number">2.</span> <span class="toc-text">二、替换元素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BB%91%E5%AE%9A%E5%85%83%E7%B4%A0"><span class="toc-number">3.</span> <span class="toc-text">三、绑定元素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        模拟Vue 中数据双向绑定
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lastnigtic</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-05-11T16:00:00.000Z" itemprop="datePublished">2017-05-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="一、原理"><a href="#一、原理" class="headerlink" title="一、原理"></a>一、原理</h2><p>如果使用 Object.defineProperty,实现一个最简单的双向绑定其实很简单，只需如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var Vue &#x3D; &#123;&#125;;</span><br><span class="line">Object.defineProperty(Vue,&#39;$data&#39;,&#123;</span><br><span class="line">    set(val)&#123;</span><br><span class="line">        document.getElementById(&#39;vue-item&#39;).innerText &#x3D; val</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">document.addEventListener(&#39;keyup&#39;, function(e)&#123;</span><br><span class="line">    Vue.$data &#x3D; e.target.value</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-data/vue-0.gif" alt="vue-bind.gif"><br>上面这个 demo 就是 vue 双向绑定最简化的原理。</p>
+<h2 id="二、替换元素"><a href="#二、替换元素" class="headerlink" title="二、替换元素"></a>二、替换元素</h2><p>想想我们使用 vue 时的规则</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">new Vue(&#123;</span><br><span class="line">    el:&#39;#app&#39;,</span><br><span class="line">    data:&#123;</span><br><span class="line">        text:&#39;hello world&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>写上页面结构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id &#x3D; &#39;app&#39;&gt;</span><br><span class="line">    &lt;input type&#x3D;&#39;text&#39; v-model&#x3D;&#39;text&#39;&gt;</span><br><span class="line">    text(markedown不让有，假设text‘双中括号’在里面)</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我们把 Vue 抽象为一个构造函数，传入这些值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function Vue(options)&#123;</span><br><span class="line">    this.data &#x3D; options.data;</span><br><span class="line">    this.id &#x3D; options.el;</span><br><span class="line">    getAllNode(document.getElementById(this.id), this);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>替换掉节点中所有的双中括号里的内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">function compile (node, vm)&#123;</span><br><span class="line">    var reg &#x3D; &#x2F;\&#123;\&#123;(.*)\&#125;\&#125;&#x2F;;&#x2F;&#x2F;匹配‘双中括号’</span><br><span class="line">    &#x2F;&#x2F; 节点类型为元素</span><br><span class="line">    if (node.nodeType &#x3D;&#x3D;&#x3D; 1) &#123;</span><br><span class="line">        var attr &#x3D; node.attributes;</span><br><span class="line">        &#x2F;&#x2F; 解析属性</span><br><span class="line">        for (var i &#x3D; 0; i &lt; attr.length; i++)&#123;</span><br><span class="line">            if(attr[i].nodeName &#x3D;&#x3D;&#x3D; &#39;v-model&#39;)&#123;</span><br><span class="line">                var name &#x3D; attr[i].nodeValue;&#x2F;&#x2F; 获取绑定的属性的名字</span><br><span class="line">                node.value &#x3D; vm.data[name];&#x2F;&#x2F; 替换值</span><br><span class="line">                node.removeAttribute(&#39;v-model&#39;);　　&#x2F;&#x2F;移除v-model</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;&#x2F; 节点类型为text</span><br><span class="line">    if(node.nodeType &#x3D;&#x3D;&#x3D; 3) &#123;</span><br><span class="line">        if(reg.test(node.nodeValue)) &#123;</span><br><span class="line">            var name &#x3D; RegExp.$1; &#x2F;&#x2F;匹配到的第一个字符</span><br><span class="line">            name &#x3D; name.trim();</span><br><span class="line">            node.nodeValue &#x3D; vm.data[name]; &#x2F;&#x2F; 将data的值赋值给node</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">function getAllNode(node, vm)&#123;</span><br><span class="line">    var length &#x3D; node.childNodes.length;</span><br><span class="line">    for(var i &#x3D; 0; i &lt; length; i++)&#123;</span><br><span class="line">        compile(node.childNodes[i], vm)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这样就可以成功替换掉双中括号的内容：</p>
+<p><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-data/1.png" alt="vue-data.png"></p>
+<h2 id="三、绑定元素"><a href="#三、绑定元素" class="headerlink" title="三、绑定元素"></a>三、绑定元素</h2><p>上面我们只是替换了元素，但还没有实现绑定<br>实现数据绑定，就要用到 definedProperty 的 set 和 get 方法：<br>首先我们要给 vue 的所有属性都添加 set 和 get 方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">function Vue()&#123;</span><br><span class="line">    &#x2F;&#x2F; *****</span><br><span class="line">    observe(data,this)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 遍历</span><br><span class="line">function observe (obj, vm)&#123;</span><br><span class="line">    for(var key in obj)&#123;</span><br><span class="line">        active(vm, key, obj[key]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F; 添加set和get</span><br><span class="line">function active (obj, key, val) &#123;</span><br><span class="line">    Object.defineProperty(obj, key, &#123;</span><br><span class="line">        get()&#123;</span><br><span class="line">            return val;</span><br><span class="line">        &#125;,</span><br><span class="line">        set(newVal)&#123;</span><br><span class="line">            if (newVal &#x3D;&#x3D;&#x3D; val)&#123; return &#125;;</span><br><span class="line">            val &#x3D; newVal;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再来明确我们要做的事，获取输入的值，改变 Vue 中相应的 data 的值，同时改变‘双中括号’中的值；</p>
+<p>我们已经给 data 的每个属性都添加了 get 和 set 的方法，现在要做的就是如何触发它们。</p>
+<p>触发它肯定是在赋值的时候，所以我们在有 v-model 属性的节点监听输入事件，同时赋值，触发 set 事件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">function compile (node, vm)&#123;</span><br><span class="line">    &#x2F;&#x2F; ***********</span><br><span class="line">    if (node.nodeType &#x3D;&#x3D;&#x3D; 1) &#123;</span><br><span class="line">        var attr &#x3D; node.attributes;</span><br><span class="line">        &#x2F;&#x2F; 解析属性</span><br><span class="line">        for (var i &#x3D; 0; i &lt; attr.length; i++)&#123;</span><br><span class="line">            if(attr[i].nodeName &#x3D;&#x3D;&#x3D; &#39;v-model&#39;)&#123;</span><br><span class="line">                var name &#x3D; attr[i].nodeValue;&#x2F;&#x2F; 获取绑定的属性的名字</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                &#x2F;&#x2F; 监听input事件</span><br><span class="line">                node.addEventListener(&#39;input&#39;, function(e)&#123;</span><br><span class="line">                    &#x2F;&#x2F; 给相应的data属性赋值，触发set</span><br><span class="line">                    vm.data[name] &#x3D; e.target.value</span><br><span class="line">                &#125;)</span><br><span class="line"></span><br><span class="line">                node.value &#x3D; vm.data[name];&#x2F;&#x2F; 替换输入框的值为data中的值</span><br><span class="line">                node.removeAttribute(&#39;v-model&#39;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;&#x2F; ************</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们监听了 input 事件，接下来要获取输入的值并同步改变文本；</p>
+<p>我们肯定希望只希望哪里改变了就对哪里做处理就行了，所以我们引入一个简单的发布——订阅组件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">function pubsub()&#123;</span><br><span class="line">    this.subs &#x3D; []</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pubsub.prototype &#x3D; &#123;</span><br><span class="line">    addSub: function(sub)&#123;</span><br><span class="line">        this.subs.push(sub);</span><br><span class="line">    &#125;,</span><br><span class="line">    pub: function()&#123;</span><br><span class="line">        this.subs.forEach(function(sub)&#123;</span><br><span class="line">            sub.update();</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在添加 set 和 get 的同时订阅事件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">function active (obj, key, val) &#123;</span><br><span class="line"></span><br><span class="line">    var pubsub &#x3D; new pubsub();</span><br><span class="line"></span><br><span class="line">    Object.defineProperty(obj.data, key, &#123;</span><br><span class="line">        get()&#123;</span><br><span class="line">            &#x2F;&#x2F; 添加订阅</span><br><span class="line">            if(Pubsub.target)&#123;</span><br><span class="line">                pubsub.addSub(Pubsub.target);</span><br><span class="line">            &#125;</span><br><span class="line">            return val;</span><br><span class="line">        &#125;,</span><br><span class="line">        set(newVal)&#123;</span><br><span class="line">            if (newVal &#x3D;&#x3D;&#x3D; val)&#123; return &#125;;</span><br><span class="line">            val &#x3D; newVal;</span><br><span class="line"></span><br><span class="line">            &#x2F;&#x2F; 发出通知</span><br><span class="line">            pubsub.pub();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>添加一个方法，来在 pubsub 发出通知时处理事件，我们命名为 watcher</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">function Watcher(vm, node, name)&#123;</span><br><span class="line">        Pubsub.target &#x3D; this;</span><br><span class="line">        this.name &#x3D; name;</span><br><span class="line">        this.node &#x3D; node;</span><br><span class="line">        this.vm &#x3D; vm;</span><br><span class="line">        this.update();</span><br><span class="line">        Pubsub.target &#x3D; null</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">Watcher.prototype &#x3D; &#123;</span><br><span class="line">      update()&#123;</span><br><span class="line">          this.get();</span><br><span class="line">          this.node.nodeValue &#x3D; this.value</span><br><span class="line">      &#125;,</span><br><span class="line">      &#x2F;&#x2F; 获取data中的属性值</span><br><span class="line">      get()&#123;</span><br><span class="line">          this.value &#x3D; this.vm[this.name] &#x2F;&#x2F; 触发相应的get</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> function getAllNode(node, vm)&#123;</span><br><span class="line">     var length &#x3D; node.childNodes.length;</span><br><span class="line">     for(var i &#x3D; 0; i &lt; length; i++)&#123;</span><br><span class="line">         compile(node.childNodes[i], vm)</span><br><span class="line">      &#125;</span><br><span class="line"> &#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个 watcher 我们在什么时候添加呢？当然是在一开始的时候（compile 里）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">function compile (node, vm)&#123;</span><br><span class="line">    var reg &#x3D; &#x2F;\&#123;\&#123;(.*)\&#125;\&#125;&#x2F;;&#x2F;&#x2F; 匹配‘双中括号’内任意字符</span><br><span class="line">    &#x2F;&#x2F; 节点类型为元素</span><br><span class="line">    if (node.nodeType &#x3D;&#x3D;&#x3D; 1) &#123;</span><br><span class="line">        var attr &#x3D; node.attributes;</span><br><span class="line">        &#x2F;&#x2F; 解析属性</span><br><span class="line">        for (var i &#x3D; 0; i &lt; attr.length; i++)&#123;</span><br><span class="line">            if(attr[i].nodeName &#x3D;&#x3D;&#x3D; &#39;v-model&#39;)&#123;</span><br><span class="line">                var name &#x3D; attr[i].nodeValue;&#x2F;&#x2F; 获取绑定的属性的名字</span><br><span class="line"></span><br><span class="line">                node.addEventListener(&#39;input&#39;, function(e)&#123;</span><br><span class="line">                    &#x2F;&#x2F; 给相应的data属性赋值，触发set</span><br><span class="line">                    vm.data[name] &#x3D; e.target.value</span><br><span class="line">                &#125;)</span><br><span class="line"></span><br><span class="line">                node.value &#x3D; vm.data[name];&#x2F;&#x2F; 替换输入框的值为data中的值</span><br><span class="line">                node.removeAttribute(&#39;v-model&#39;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">    &#x2F;&#x2F; 节点类型为text</span><br><span class="line">    if(node.nodeType &#x3D;&#x3D;&#x3D; 3) &#123;</span><br><span class="line">        if(reg.test(node.nodeValue)) &#123;</span><br><span class="line">            var name &#x3D; RegExp.$1; &#x2F;&#x2F;匹配到的第一个字符</span><br><span class="line">            name &#x3D; name.trim();</span><br><span class="line"></span><br><span class="line">            &#x2F;&#x2F; node.nodeValue &#x3D; vm[name];</span><br><span class="line"></span><br><span class="line">            new Watcher(vm, node, name);&#x2F;&#x2F; 观察输入的值</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-data/vue-1.gif" alt="vue-data.png"></p>
+<p>至此，便模拟了整个数据绑定的流程。</p>
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><p>最后理清整个过程的思路</p>
+<p><strong>创建 Vue：</strong><br><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-data/new-Vue.png" alt="vue-data.png"></p>
+<p><strong>input 事件:</strong><br><img src="https://raw.githubusercontent.com/lastnigtic/presentationPIC/master/Vue-data/new-Vue-input.png" alt="vue-data.png"></p>
+<p>源码在我的 github 仓库：<a target="_blank" rel="noopener" href="https://github.com/lastnigtic/vue-bindData">https://github.com/lastnigtic/vue-bindData</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">一、原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%9B%BF%E6%8D%A2%E5%85%83%E7%B4%A0"><span class="toc-number">2.</span> <span class="toc-text">二、替换元素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BB%91%E5%AE%9A%E5%85%83%E7%B4%A0"><span class="toc-number">3.</span> <span class="toc-text">三、绑定元素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/posts/vue-data/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/posts/vue-data/&text=模拟Vue 中数据双向绑定"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/posts/vue-data/&title=模拟Vue 中数据双向绑定"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/posts/vue-data/&is_video=false&description=模拟Vue 中数据双向绑定"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=模拟Vue 中数据双向绑定&body=Check out this article: http://lastnigtic.cn/posts/vue-data/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/posts/vue-data/&title=模拟Vue 中数据双向绑定"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/posts/vue-data/&title=模拟Vue 中数据双向绑定"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/posts/vue-data/&title=模拟Vue 中数据双向绑定"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/posts/vue-data/&title=模拟Vue 中数据双向绑定"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/posts/vue-data/&name=模拟Vue 中数据双向绑定&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/posts/vue-data/&t=模拟Vue 中数据双向绑定"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2017-2022
+    lastnigtic
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.staticfile.org/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.slim.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.8/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
