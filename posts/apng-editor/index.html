@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+	<!-- so meta -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+	 <meta name="description" content="想必大家都用都过图，知道表情包一般都是gif图，本文将带你了解它的船新升级版本 —— Apng。希望通过此文，大家能对Apng以及如何通过js操作二进制数据有所了解。  简介说起png，大家都有所耳闻，png的全称是Portable Network Graphics（便携式网络图形），是一种支持无损数据压缩的光栅图形文件格式，被开发为一种改进的gif（有说法称png是png not gif的简写">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gif的进化版 —— Apng的解析以及编辑">
+<meta property="og:url" content="http://lastnigtic.cn/posts/apng-editor/index.html">
+<meta property="og:site_name" content="Blog of lastnigtic">
+<meta property="og:description" content="想必大家都用都过图，知道表情包一般都是gif图，本文将带你了解它的船新升级版本 —— Apng。希望通过此文，大家能对Apng以及如何通过js操作二进制数据有所了解。  简介说起png，大家都有所耳闻，png的全称是Portable Network Graphics（便携式网络图形），是一种支持无损数据压缩的光栅图形文件格式，被开发为一种改进的gif（有说法称png是png not gif的简写">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://lastnigtic.cn/posts/apng-editor/20210805063629705.gif">
+<meta property="og:image" content="http://lastnigtic.cn/posts/apng-editor/can-use.png">
+<meta property="og:image" content="http://lastnigtic.cn/posts/apng-editor/apng_assembling.png">
+<meta property="og:image" content="http://lastnigtic.cn/posts/apng-editor/image-20220408172631310.png">
+<meta property="og:image" content="http://lastnigtic.cn/posts/apng-editor/PNG_test1.jpg">
+<meta property="og:image" content="http://lastnigtic.cn/posts/apng-editor/change-time.gif">
+<meta property="og:image" content="http://lastnigtic.cn/posts/apng-editor/12.5ms.png">
+<meta property="article:published_time" content="2022-04-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-04-14T14:57:15.994Z">
+<meta property="article:author" content="lastnigtic">
+<meta property="article:tag" content="lastnigtic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://lastnigtic.cn/posts/apng-editor/20210805063629705.gif">
+	   
+	<link rel="shortcut icon" href="/images/favicon.ico" />
+	   
+	<link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192" />
+	   
+	<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+	  
+	<!-- title -->
+	<title>Gif的进化版 —— Apng的解析以及编辑</title>
+	<!-- styles -->
+	
+<link rel="stylesheet" href="/css/style.css">
+
+	<!-- persian styles -->
+	
+	<!-- rss -->
+	 
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" "Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post " href="/posts/prosemirror-state-to-dom/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/posts/apng-editor/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/posts/apng-editor/&text=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/posts/apng-editor/&title=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/posts/apng-editor/&is_video=false&description=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Gif的进化版 —— Apng的解析以及编辑&body=Check out this article: http://lastnigtic.cn/posts/apng-editor/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/posts/apng-editor/&title=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/posts/apng-editor/&title=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/posts/apng-editor/&title=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/posts/apng-editor/&title=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/posts/apng-editor/&name=Gif的进化版 —— Apng的解析以及编辑&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/posts/apng-editor/&t=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Apng-%E6%A0%BC%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">Apng 格式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#PNG-signature"><span class="toc-number">2.1.</span> <span class="toc-text">PNG signature</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IHDR"><span class="toc-number">2.2.</span> <span class="toc-text">IHDR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#acTL"><span class="toc-number">2.3.</span> <span class="toc-text">acTL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fcTL"><span class="toc-number">2.4.</span> <span class="toc-text">fcTL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fdAT"><span class="toc-number">2.5.</span> <span class="toc-text">fdAT</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JS-%E4%B8%AD%E7%9A%84%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%A4%84%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">JS 中的二进制处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ArrayBuffer"><span class="toc-number">3.1.</span> <span class="toc-text">ArrayBuffer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DataView"><span class="toc-number">3.2.</span> <span class="toc-text">DataView</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Uint8Array"><span class="toc-number">3.3.</span> <span class="toc-text">Uint8Array</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%BC%96%E8%BE%91"><span class="toc-number">4.</span> <span class="toc-text">实现编辑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E9%A2%84%E8%A7%88"><span class="toc-number">5.</span> <span class="toc-text">实现预览</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%93%E5%8C%85%E5%BA%94%E7%94%A8"><span class="toc-number">6.</span> <span class="toc-text">打包应用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">8.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Gif的进化版 —— Apng的解析以及编辑
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">lastnigtic</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-04-12T16:00:00.000Z" itemprop="datePublished">2022-04-13</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <blockquote>
+<p>想必大家都用都过图，知道表情包一般都是<code>gif</code>图，本文将带你了解它的船新升级版本 —— <code>Apng</code>。希望通过此文，大家能对<code>Apng</code>以及如何通过<code>js</code>操作二进制数据有所了解。</p>
+</blockquote>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>说起<code>png</code>，大家都有所耳闻，<code>png</code>的全称是<strong>Portable Network Graphics</strong>（便携式网络图形），是一种支持无损数据压缩的光栅图形文件格式，被开发为一种改进的<code>gif</code>（有说法称<code>png</code>是<strong>png not gif</strong>的简写）。</p>
+<p>我们对<code>png</code>的第一印象一般都是支持透明度，对<code>gif</code>的印象一般都是动图（各种表情包～），那为什么说<code>png</code>是<code>gif</code>的改进型呢？这里有一段故事：<code>gif</code>的全称是 <strong>Graphics Interchange Format</strong>（ 图形交换格式 ），最初是为了填补跨平台图像格式的空白，可以理解为静态图像和视频之间的空白。<code>gif</code>在当时来说已经满足了需求，问题在于<code>gif</code>压缩使用了<code>LZW</code>算法（串表压缩算法），而这个算法的商用是需要授权的，在这个阴影笼罩下，业界很快就推出了不含<code>LZW</code>算法的图片，<code>png</code> 由此诞生。在我们的认识中，<code>gif</code>的主要特点是支持动态图像的，基于这一点，<code>png</code>又怎么能够替代<code>gif</code>呢？这个要基于当时的实际情况考虑，当时动态的<code>gif</code>的应用是比较少的，并且基于其他各种原因，<code>png</code>被确定应是一种单图像格式规范，多图像的支持由后续的扩展实现，称为<code>MNG</code>全称是<strong>Multiple-image Network Graphics</strong>。<code>MNG</code>于 2001 年推出，但可惜的是没有被各大浏览器支持，最后销声匿迹。但是 2004 年，<code>Mozilla</code>内部诞生了一种叫做<code>Apng</code>的动图格式，它本身由一帧帧<code>png</code>组成，结合优异的压缩算法，能在与<code>gif</code>图相当大小的情况下实现更好的现实效果，在不支持<code>Apng</code>的浏览器里也能降级为静态的<code>png</code>图片，下面是<code>gif</code>与<code>Apng</code>的效果对比。</p>
+<p><img src="/posts/apng-editor/20210805063629705.gif" alt="500"></p>
+<p><code>Apng</code>在近几年已经得到各大浏览器的支持，在需要显示动态图且对图片质量有要求的场景，我们可以尝试使用<code>Apng</code>，由于<code>png</code>本身的特性，显示效果会比<code>gif</code>更好。</p>
+<p><img src="/posts/apng-editor/can-use.png" alt="can-use"></p>
+<p>​</p>
+<h1 id="Apng-格式"><a href="#Apng-格式" class="headerlink" title="Apng 格式"></a>Apng 格式</h1><p><code>Apng</code>作为<code>png</code>的一种扩展，主要的整个数据结果与<code>png</code>一致，只是多定义了几种数据块类型，<code>Apng</code>的结构如下图所示，它实际上是由多张<code>png</code>图片组成的，通过<code>acTL</code>模块控制动画效果，<code>fcTL</code>模块控制帧间的过度效果。图像的数据块结构保持与<code>png</code>一致，除了第一帧之外的数据帧命名为<code>fdAT</code>，其他的数据块与<code>png</code>一致。</p>
+<p><img src="/posts/apng-editor/apng_assembling.png" alt="img"></p>
+<p>每个数据块的组成如下图，除了文件头，其他块都可以按照这个规则去解析</p>
+<p><img src="/posts/apng-editor/image-20220408172631310.png" alt="image-20220408172631310"></p>
+<p>接下我们简单了解一下几个主要数据块。</p>
+<h2 id="PNG-signature"><a href="#PNG-signature" class="headerlink" title="PNG signature"></a>PNG signature</h2><p>这一段文件头是固定的，称为魔数<strong>magic number</strong>，是<code>png</code>专用的文件头。</p>
+<h2 id="IHDR"><a href="#IHDR" class="headerlink" title="IHDR"></a>IHDR</h2><p>文件头数据块<code>IHDR</code>(<strong>header chunk</strong>)：它包含有<code>png</code>文件中存储的图像数据的基本信息，并要作为第一个数据块出现在<code>png</code>数据流中，而且一个<code>png</code>数据流中只能有一个文件头数据块。它储存了以下一些数据</p>
+<ul>
+<li><p><code>width</code> 长度</p>
+</li>
+<li><p><code>height</code> 高度</p>
+</li>
+<li><p><code>bit depth</code> 图像深度</p>
+</li>
+<li><p><code>color type</code> 颜色类型</p>
+</li>
+<li><p><code>compression method</code> 压缩方法</p>
+</li>
+<li><p><code>filter method</code> 滤波器方法</p>
+</li>
+<li><p><code>interlace method</code> 非隔行扫描方法</p>
+</li>
+</ul>
+<p>其中需要关注的是<code>width</code>和<code>height</code>，<code>png</code>的宽高在这里定义。</p>
+<p><code>color type</code>代表图像的颜色类型，能区分是灰阶，索引色还是真彩色等等，当值为 3 时，代表是索引色，此时需要提供一个<code>PLTE</code>数据块。扩展一下，<code>png</code>又可以细分为<code>png-8</code>，<code>png-24</code>，<code>png-32</code>，其中<code>png-8</code>使用的就是索引色，具体可以参考下图：</p>
+<p><img src="/posts/apng-editor/PNG_test1.jpg" alt="img"></p>
+<h2 id="acTL"><a href="#acTL" class="headerlink" title="acTL"></a>acTL</h2><p>动画控制数据块<strong>animation control chunk</strong>，用于控制动画的效果，提供了两个数据</p>
+<ul>
+<li>num_frames 总共有多少帧</li>
+<li>num_play 动画播放多少次，0 为循环播放</li>
+</ul>
+<h2 id="fcTL"><a href="#fcTL" class="headerlink" title="fcTL"></a>fcTL</h2><p>帧控制数据块<strong>frame control chunk</strong>，用于控制如何帧间混合效果，是直接覆盖还是部分覆盖，偏移量和延时等信息，提供的数据有：</p>
+<ul>
+<li><p>sequence_number 帧序号</p>
+</li>
+<li><p>width 宽度</p>
+</li>
+<li><p>height 高度</p>
+</li>
+<li><p>x_offset 此帧数据 x 轴偏移量</p>
+</li>
+<li><p>y_offset 此帧数据 y 轴偏移量</p>
+</li>
+<li><p>delay_num 间隔分子</p>
+</li>
+<li><p>delay_den 间隔分母</p>
+</li>
+<li><p>dispose_op 在显示该帧之前，需要对前面缓冲输出区域做何种处理。</p>
+</li>
+<li><p>blend_op 帧渲染类型</p>
+</li>
+</ul>
+<p>这里可以发现<code>Apng</code>优化体积的一种手段，每一帧的数据提供的画面不一定是完整，需要结合上一帧来渲染，如果整个画面只有部分变化，实际上当前帧只提供了变化部分的图像数据，通过这样的方式可以有效地节省文件体积。</p>
+<p><code>dispose_op</code>规定了在显示下一帧之前要做的处理，取值对应的处理方式：</p>
+<ul>
+<li>0: 不做任何处理，保持原样</li>
+<li>1: 把当前缓冲区的数据都处理为透明</li>
+<li>2: 渲染下一帧之前把缓冲区恢复成之前的状况</li>
+</ul>
+<p><code>blend_op</code>规定了当前帧的内容的处理方式，取值与对应的处理方式：</p>
+<ul>
+<li>0: 将当前帧的内容替换到当前缓冲区上</li>
+<li>1: 将当前帧的内容混合到当前缓冲区中</li>
+</ul>
+<h2 id="fdAT"><a href="#fdAT" class="headerlink" title="fdAT"></a>fdAT</h2><p>帧数据块<strong>frame data chunk</strong>，基本结构与<code>IDAT</code>一致，只是数据部分前面多出<code>4个字节</code>表明帧序号。</p>
+<h1 id="JS-中的二进制处理"><a href="#JS-中的二进制处理" class="headerlink" title="JS 中的二进制处理"></a>JS 中的二进制处理</h1><p>经过上面的介绍，我们了解了<code>Apng</code>在<code>png</code>之上新加的几个数据块的结构，在此基础之上，我们可以通过解析<code>Apng</code>的内容并修改对应位置的数据来调整<code>Apng</code>的表现，并预览修改后的效果。</p>
+<p>我们用<code>javascript</code>来解析<code>apng</code>文件，首先就需要了解一下<code>js</code>中处理二进制数据的几个方法：</p>
+<h2 id="ArrayBuffer"><a href="#ArrayBuffer" class="headerlink" title="ArrayBuffer"></a>ArrayBuffer</h2><p>代表一个二进制数据，表示通用的、固定长度的原始二进制数据缓冲区，不可编辑。可以理解为这个对象存了一系列的<code>01</code>数据。</p>
+<h2 id="DataView"><a href="#DataView" class="headerlink" title="DataView"></a>DataView</h2><p>数据视图，是一个可以从 二进制<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer"><code>ArrayBuffer</code></a> 对象中读写多种数值类型的底层接口，使用它时，不用考虑不同平台的<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Glossary/Endianness">字节序</a>问题。通俗的理解就是<code>ArrayBuffer</code>的编辑要委托给<code>DataView</code>来处理。</p>
+<h2 id="Uint8Array"><a href="#Uint8Array" class="headerlink" title="Uint8Array"></a>Uint8Array</h2><p>表示一个 8 位无符号整型数组，创建时内容被初始化为<code>0</code>。创建完后，可以以对象的方式或使用数组下标索引的方式引用数组中的元素。</p>
+<h1 id="实现编辑"><a href="#实现编辑" class="headerlink" title="实现编辑"></a>实现编辑</h1><p>我们这次处理大概就用上以上几个对象来处理，首先我们根据<code>magic number</code>判断一下这个文件是不是<code>png</code>，然后就可以开始遍历这个数据对象，代码如下：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> travelsChunk = (</span><br><span class="line">	buffer: <span class="built_in">ArrayBuffer</span>,</span><br><span class="line">	cb: <span class="function">(<span class="params">chunkBuffer: <span class="built_in">Uint8Array</span>, chunkOffset: <span class="built_in">number</span>, fileBuffer: <span class="built_in">ArrayBuffer</span></span>) =&gt;</span> <span class="built_in">void</span></span><br><span class="line">) =&gt; &#123;</span><br><span class="line">	<span class="keyword">let</span> byteOffset = <span class="number">8</span>; <span class="comment">// png文件头</span></span><br><span class="line">	<span class="keyword">const</span> dataView = <span class="keyword">new</span> <span class="built_in">DataView</span>(buffer);</span><br><span class="line">	<span class="keyword">do</span> &#123;</span><br><span class="line">		<span class="keyword">const</span> chunkLength = dataView.getUint32(byteOffset);</span><br><span class="line">		<span class="keyword">const</span> chunkData = <span class="keyword">new</span> <span class="built_in">Uint8Array</span>(buffer.slice(byteOffset, byteOffset + <span class="number">8</span> + chunkLength + <span class="number">4</span>));</span><br><span class="line"></span><br><span class="line">		cb(chunkData, byteOffset, buffer);</span><br><span class="line">		byteOffset += <span class="number">4</span> + <span class="number">4</span> + chunkLength + <span class="number">4</span>;</span><br><span class="line">	&#125; <span class="keyword">while</span> (byteOffset &lt; buffer.byteLength);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这里做的处理主要就是根据块的结构，把整个二进制对象分割成不同的数据块做处理，遍历直到结束。</p>
+<p>通过解析每个数据块的第 4 到 8 的字节，我们可以获得数据块的名称，然后根据每个数据块不同的名称，我们把需要支持编辑的数据块做处理，其它的做保留，例如一个数据块的基类被定义为：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Chunk</span>&lt;<span class="title">T</span> </span>= <span class="built_in">object</span>&gt; &#123;</span><br><span class="line">	<span class="comment">// 二进制数据</span></span><br><span class="line">	<span class="keyword">public</span> data: <span class="built_in">Uint8Array</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 数据块的名称</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">get</span> <span class="title">name</span>() &#123;</span><br><span class="line">		<span class="keyword">return</span> readBinary(<span class="built_in">this</span>.data.subarray(<span class="number">4</span>, <span class="number">8</span>));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="title">constructor</span>(<span class="params">data: <span class="built_in">Uint8Array</span></span>)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.data = data;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 修改配置并创建新的实例</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="title">newByConfig</span>(<span class="params">newConfig: Partial&lt;T&gt;</span>)</span> &#123;</span><br><span class="line">		<span class="keyword">const</span> newInstance = <span class="built_in">this</span>.createNewInstance();</span><br><span class="line">		<span class="built_in">Object</span>.keys(newConfig).forEach(<span class="function">(<span class="params">name</span>) =&gt;</span> (newInstance[name] = newConfig[name]));</span><br><span class="line">		newInstance.syncData();</span><br><span class="line">		newInstance.data = createBinary(newInstance.data.subarray(<span class="number">4</span>, <span class="built_in">this</span>.data.byteLength - <span class="number">4</span>));</span><br><span class="line">		<span class="keyword">return</span> newInstance <span class="keyword">as</span> unknown <span class="keyword">as</span> <span class="built_in">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 不同的更新data的操作</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="title">syncData</span>(<span class="params"></span>)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="title">createNewInstance</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> Chunk(<span class="built_in">this</span>.data);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后续我们修改内容就通过统一的暴露的方法就可以了，剩下的就是用户界面的工作以及预览。</p>
+<h1 id="实现预览"><a href="#实现预览" class="headerlink" title="实现预览"></a>实现预览</h1><p>解析了<code>Apng</code>文件之后，我们就可以根据<code>fcTL</code>的配置去渲染每一帧的图片，根据<code>acTL</code>的配置决定要播放多少次。其中主要的处理就是<code>fcTL</code>中的<code>dispose_op</code>以及<code>blend_op</code>中定义的处理，我们使用<code>canvas</code>去渲染的话，这一部分还是比较好处理的，我们只需要根据相应的数据保留或者清除对应区域的图像就行，以下为处理的示例：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 上一帧定义了要把数据区清空</span></span><br><span class="line"><span class="keyword">if</span> (prevFrame &amp;&amp; prevFrame.fcTLChunk.disposeOp == <span class="number">1</span>) &#123;</span><br><span class="line">	<span class="built_in">this</span>.ctx.clearRect(</span><br><span class="line">		prevFrame.fcTLChunk.xOffset,</span><br><span class="line">		prevFrame.fcTLChunk.yOffset,</span><br><span class="line">		prevFrame.fcTLChunk.width,</span><br><span class="line">		prevFrame.fcTLChunk.height</span><br><span class="line">	);</span><br><span class="line">	<span class="comment">// 上一帧定义了要把数据区恢复成之前的状态</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (prevFrame &amp;&amp; <span class="built_in">this</span>.prevFrameData &amp;&amp; prevFrame.fcTLChunk.disposeOp == <span class="number">2</span>) &#123;</span><br><span class="line">	<span class="built_in">this</span>.ctx.putImageData(<span class="built_in">this</span>.prevFrameData, prevFrame.fcTLChunk.xOffset, prevFrame.fcTLChunk.yOffset);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 保存渲染当前帧之前的状态</span></span><br><span class="line"><span class="keyword">if</span> (frame.fcTLChunk.disposeOp == <span class="number">2</span>) &#123;</span><br><span class="line">	<span class="built_in">this</span>.prevFrameData = <span class="built_in">this</span>.ctx.getImageData(fctl.xOffset, fctl.yOffset, fctl.width, fctl.height);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 渲染当前帧之前把数据区清空</span></span><br><span class="line"><span class="keyword">if</span> (frame.fcTLChunk.blendOp == <span class="number">0</span>) &#123;</span><br><span class="line">	<span class="built_in">this</span>.ctx.clearRect(fctl.xOffset, fctl.yOffset, fctl.width, fctl.height);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.ctx.drawImage(<span class="built_in">this</span>.$images[<span class="built_in">this</span>.index], fctl.xOffset, fctl.yOffset);</span><br></pre></td></tr></table></figure>
+
+<p>然后我们只需要根据<code>acTL</code>中定义的播放次数进行播放，就了预览。</p>
+<p>至此我们就实现了编辑与预览的功能，例如下面这个例子，我们可以把一张只播放一次的<code>apng</code>图片修改成循环播放：</p>
+<p><img src="/posts/apng-editor/change-time.gif" alt="change-time"></p>
+<p>也可以把每一帧的间隔调小一点然后，让小象跑得更快（注意的一点是大部分浏览器都把最小间隔设定在<code>11ms</code>，如果小于这个值，间隔会自动提升）：</p>
+<p><img src="/posts/apng-editor/12.5ms.png" alt="12.5ms"></p>
+<h1 id="打包应用"><a href="#打包应用" class="headerlink" title="打包应用"></a>打包应用</h1><p>实现了这些功能之后，作为一个编辑器工具，它是完全可以离线使用，我们可以把它打包成一个<code>App</code>。作为一个小工具，不希望有太大的体积，除了<code>electron</code>之外，我们还有很多其他的选择：<a target="_blank" rel="noopener" href="https://github.com/tauri-apps/tauri">tauri</a>，<a href="https://link.zhihu.com/?target=https://github.com/neutralinojs/neutralinojs">NeutralinoJS</a> ，<a href="https://link.zhihu.com/?target=https://github.com/chromelyapps/Chromely">Chromely</a> ，<a href="https://link.zhihu.com/?target=https://github.com/pojala/electrino">electrino</a> ，<a href="https://link.zhihu.com/?target=https://github.com/asticode/go-astilectron">go-astilectron</a> ，<a href="https://link.zhihu.com/?target=https://github.com/wailsapp/wails">wails</a>等等，它们各有千秋。从<code>star</code>数出发，我选择使用<code>tauri</code>来打包应用。</p>
+<p><code>tauri</code>前端直接使用系统的<code>webview</code>，与系统交互部分使用<code>rust</code>编写，虽然兼容性肯定是不如<code>electron</code>，但用来做一个小工具绰绰有余。使用起来也比较方便，只需要安装一下<code>rust</code>以及配置下环境就可以了，使用系统层面的<code>API</code>也比较方便，直接看下<a target="_blank" rel="noopener" href="https://tauri.studio/docs/api/js/">API 文档</a>，然后直接调用就可以了，最后就可以根据不同的环境打包成不同的安装包。</p>
+<p>但<code>tauri</code>直接使用系统<code>webview</code>的方式也导致了他的兼容性堪忧，在<code>mac</code>中就不可避免的要去面对<code>safari</code>这位重量级大哥。比如我这个小工具中，<code>tauri</code>表现出来的对文件的支持就比较糟糕，在<code>mac</code>下<code>input[type=file]</code>无法唤起文件选择框(<a target="_blank" rel="noopener" href="https://github.com/tauri-apps/wry/issues/305">issues</a>)，在<code>linux</code>下<code>input</code>是没有问题了，但文件的<code>drop</code>事件没有触发(<a target="_blank" rel="noopener" href="https://github.com/tauri-apps/tauri/issues/3898">issues</a>)。在<code>mac</code>还会有在使用 <code>canvas</code> 时不时会崩溃等问题，感觉这条路实现的跨端的应用还是比较坎坷的……😂</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><code>png</code>作为<code>gif</code>的替代品，虽然现在的热度并不高，但它凭借优秀的表现，相信它会在日后成为主流的选择。通过这篇文章我们也可看到现在<code>web</code>生态的蓬勃发展，现在你可以相对方便地去操作文件，调用系统<code>API</code>，开发一款自己的应用，能做的事情越来越多，希望后续也能继续保持这个势头发展下 🤯！</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><p><a target="_blank" rel="noopener" href="https://codereview.chromium.org/2814453004">https://codereview.chromium.org/2814453004</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://bugzilla.mozilla.org/show_bug.cgi?id=531802">https://bugzilla.mozilla.org/show_bug.cgi?id=531802</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://wiki.mozilla.org/APNG_Specification">https://wiki.mozilla.org/APNG_Specification</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://littlesvr.ca/apng/gif_apng_webp.html">http://littlesvr.ca/apng/gif_apng_webp.html</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Portable_Network_Graphics">https://en.wikipedia.org/wiki/Portable_Network_Graphics</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/APNG">https://en.wikipedia.org/wiki/APNG</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://people.apache.org/~jim/NewArchitect/webrevu/1997/05_09/designers/05_09_97_1.html">https://people.apache.org/~jim/NewArchitect/webrevu/1997/05_09/designers/05_09_97_1.html</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ECJTUACM-873284962/p/8986391.html">https://www.cnblogs.com/ECJTUACM-873284962/p/8986391.html</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://sking7.github.io/articles/66662475.html">https://sking7.github.io/articles/66662475.html</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://user.observersnews.com/main/content?id=565154&amp;comments-container">https://user.observersnews.com/main/content?id=565154&amp;comments-container</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://www.alloyteam.com/2017/03/the-story-of-png-get-images-and-pixel-content/">http://www.alloyteam.com/2017/03/the-story-of-png-get-images-and-pixel-content/</a></p>
+</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Apng-%E6%A0%BC%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">Apng 格式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#PNG-signature"><span class="toc-number">2.1.</span> <span class="toc-text">PNG signature</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IHDR"><span class="toc-number">2.2.</span> <span class="toc-text">IHDR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#acTL"><span class="toc-number">2.3.</span> <span class="toc-text">acTL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fcTL"><span class="toc-number">2.4.</span> <span class="toc-text">fcTL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fdAT"><span class="toc-number">2.5.</span> <span class="toc-text">fdAT</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JS-%E4%B8%AD%E7%9A%84%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%A4%84%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">JS 中的二进制处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ArrayBuffer"><span class="toc-number">3.1.</span> <span class="toc-text">ArrayBuffer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DataView"><span class="toc-number">3.2.</span> <span class="toc-text">DataView</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Uint8Array"><span class="toc-number">3.3.</span> <span class="toc-text">Uint8Array</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%BC%96%E8%BE%91"><span class="toc-number">4.</span> <span class="toc-text">实现编辑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E9%A2%84%E8%A7%88"><span class="toc-number">5.</span> <span class="toc-text">实现预览</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%93%E5%8C%85%E5%BA%94%E7%94%A8"><span class="toc-number">6.</span> <span class="toc-text">打包应用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">8.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lastnigtic.cn/posts/apng-editor/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lastnigtic.cn/posts/apng-editor/&text=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lastnigtic.cn/posts/apng-editor/&title=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lastnigtic.cn/posts/apng-editor/&is_video=false&description=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Gif的进化版 —— Apng的解析以及编辑&body=Check out this article: http://lastnigtic.cn/posts/apng-editor/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lastnigtic.cn/posts/apng-editor/&title=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lastnigtic.cn/posts/apng-editor/&title=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lastnigtic.cn/posts/apng-editor/&title=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lastnigtic.cn/posts/apng-editor/&title=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lastnigtic.cn/posts/apng-editor/&name=Gif的进化版 —— Apng的解析以及编辑&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lastnigtic.cn/posts/apng-editor/&t=Gif的进化版 —— Apng的解析以及编辑"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2017-2022
+    lastnigtic
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdn.staticfile.org/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.slim.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.8/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
