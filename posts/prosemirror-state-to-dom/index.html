@@ -28,7 +28,7 @@
 <meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/mark-weried.gif">
 <meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/mark-update.png">
 <meta property="article:published_time" content="2020-09-05T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-04-27T14:10:25.144Z">
+<meta property="article:modified_time" content="2022-04-27T14:20:56.089Z">
 <meta property="article:author" content="lastnigtic">
 <meta property="article:tag" content="lastnigtic">
 <meta name="twitter:card" content="summary">
@@ -144,77 +144,77 @@
   
 
   <div class="content" itemprop="articleBody">
-    <p>上一篇文章简单介绍了 prosemirror 内部如何对输入行为作出反应，这一篇文章主要介绍一下 prosemirror 如何完成从 state 到浏览器 DOM 的渲染。</p>
-<h2 id="视图"><a href="#视图" class="headerlink" title="视图"></a><strong>视图</strong></h2><p>使用 prosemirror 时我们有以下三种定义编辑器内视图渲染的方式：</p>
+    <p>上一篇文章简单介绍了 <code>prosemirror</code> 内部如何对输入行为作出反应，这一篇文章主要介绍一下 <code>prosemirror</code> 如何完成从 <code>state</code> 到浏览器 <code>DOM</code> 的渲染。</p>
+<h2 id="视图"><a href="#视图" class="headerlink" title="视图"></a><strong>视图</strong></h2><p>使用 <code>prosemirror</code> 时我们有以下三种定义编辑器内视图渲染的方式：</p>
 <ol>
 <li>直接使用 nodeType/markType 中的 toDOM 属性，实际渲染由<code>prosemirror-model</code>提供的<code>DOMSerializer.renderSpec</code>负责</li>
-<li>使用 nodeView 渲染自定义的节点</li>
-<li>使用 decoration 渲染与 doc 内容无关的节点</li>
+<li>使用 <code>nodeView</code> 渲染自定义的节点</li>
+<li>使用 <code>decoration</code> 渲染与 <code>doc</code> 内容无关的节点</li>
 </ol>
-<p>​ 从使用者的角度看，我们在 doc 插入了什么内容，dom 中就会渲染出相应类型的内容，这一种方式看起来很像 React 的数据驱动视图的形式。</p>
-<p>实际上作者在 state 到 dom 这一层做了很多工作，帮我们把复杂度都抹平了，平时使用起来无需关注到这部分逻辑，但了解这一步过程才能帮助我们在使用时更好地排查问题以及了解编辑器设计的理念。</p>
-<h2 id="ViewDesc"><a href="#ViewDesc" class="headerlink" title="ViewDesc"></a><strong>ViewDesc</strong></h2><p>​ prosemirror 内部存在一种用于描述视图对象的特殊结构——ViewDesc，他会绑定在编辑器的 DOM 中的 pmViewDesc 属性上，整篇文档的 desc 挂载在 view 实例的 docView 上。作者在文档中没有提供这部分的介绍，但这部分时 view 中最重要的一环，直接与我们看到的内容相关。</p>
-<p>ViewDesc 可以看作是 dom 与编辑器 state 的中间层，相当于是 prosemirror 的<code>virtual-dom</code>。ViewDesc 会挂载到相应的 dom 的 pmViewDesc 属性上，并保存相应的 dom 和 node：</p>
+<p>​ 从使用者的角度看，我们在 <code>doc</code> 插入了什么内容，<code>dom</code> 中就会渲染出相应类型的内容，这一种方式看起来很像 <code>React</code> 的数据驱动视图的形式。</p>
+<p>实际上作者在 <code>state</code> 到 <code>dom</code> 这一层做了很多工作，帮我们把复杂度都抹平了，平时使用起来无需关注到这部分逻辑，但了解这一步过程才能帮助我们在使用时更好地排查问题以及了解编辑器设计的理念。</p>
+<h2 id="ViewDesc"><a href="#ViewDesc" class="headerlink" title="ViewDesc"></a><strong>ViewDesc</strong></h2><p>​ <code>prosemirror</code> 内部存在一种用于描述视图对象的特殊结构——<code>ViewDesc</code>，他会绑定在编辑器的 <code>DOM</code> 中的 <code>pmViewDesc</code> 属性上，整篇文档的 <code>desc</code> 挂载在 <code>view</code> 实例的 <code>docView</code> 上。作者在文档中没有提供这部分的介绍，但这部分时 view 中最重要的一环，直接与我们看到的内容相关。</p>
+<p><code>ViewDesc</code> 可以看作是 <code>dom</code> 与编辑器 <code>state</code> 的中间层，相当于是 <code>prosemirror</code> 的<code>virtual-dom</code>。<code>ViewDesc</code> 会挂载到相应的 <code>dom</code> 的 <code>pmViewDesc</code> 属性上，并保存相应的 <code>dom</code> 和 <code>node：</code></p>
 <p><img src="/posts/prosemirror-state-to-dom/pm-view.png" alt="img"></p>
-<p>prosemirror-view 总共定义了 7 种 viewDesc：</p>
+<p><code>prosemirror-view</code> 总共定义了 7 种 <code>ViewDesc</code>：</p>
 <ul>
-<li>NodeViewDesc<ul>
-<li>prosemirror 基本节点的 desc，涉及 dom 与节点的绑定，更新和销毁等</li>
+<li><code>NodeViewDesc</code><ul>
+<li><code>prosemirror</code> 基本节点的 <code>desc</code>，涉及 <code>dom</code> 与节点的绑定，更新和销毁等</li>
 </ul>
 </li>
-<li>CustomNodeViewDesc<ul>
-<li>继承 NodeViewDesc，主要扩展了 update 的判断，以及暴露诸如 select，destroy 等的钩子，NodeView 对应</li>
+<li><code>CustomNodeViewDesc</code><ul>
+<li>继承 <code>NodeViewDesc</code>，主要扩展了 <code>update</code> 的判断，以及暴露诸如 <code>select</code>，<code>destroy</code> 等的钩子，<code>NodeView</code> 对应</li>
 </ul>
 </li>
-<li>TextViewDesc<ul>
-<li>继承 NodeViewDesc，文本节点的 desc</li>
+<li><code>TextViewDesc</code><ul>
+<li>继承 <code>NodeViewDesc</code>，文本节点的 <code>desc</code></li>
 </ul>
 </li>
-<li>MarkViewDesc<ul>
-<li>mark 的 desc，为了简化和可预测，有固定的嵌套顺序</li>
+<li><code>MarkViewDesc</code><ul>
+<li><code>mark</code> 的 <code>desc</code>，为了简化和可预测，有固定的嵌套顺序</li>
 </ul>
 </li>
-<li>WidgetViewDesc<ul>
-<li>decoration 的 desc，为 state.doc 中的数据无关</li>
+<li><code>WidgetViewDesc</code><ul>
+<li><code>decoration</code> 的 <code>desc</code>，为 <code>state.doc</code> 中的数据无关</li>
 </ul>
 </li>
-<li>CompositionViewDesc<ul>
-<li>联想输入的 desc，用于表明和保护输入节点</li>
+<li><code>CompositionViewDesc</code><ul>
+<li>联想输入的 <code>desc</code>，用于表明和保护输入节点</li>
 </ul>
 </li>
-<li>BRHackViewDesc<ul>
-<li>插入一个 br，用于处理空段落的高度高度问题</li>
+<li><code>BRHackViewDesc</code><ul>
+<li>插入一个 <code>br</code>，用于处理空段落的高度高度问题</li>
 </ul>
 </li>
 </ul>
-<p>viewDesc 主要提供了匹配节点，获取索引，状态标记等等方法，帮助 prosemirror 更好地处理 state 与 dom 的状态同步</p>
-<h2 id="视图更新"><a href="#视图更新" class="headerlink" title="视图更新"></a><strong>视图更新</strong></h2><p>​ 对于 prosemirror 来说，视图的更新面向的不是用户做了什么操作，而是面向 state。</p>
-<p>用户做了什么操作这部分由 DOMObserver 去处理并应用到 state 上，视图显示的状态与 state 强相关，抹平了处理用户行为的复杂性，简化了更新的处理，但同样会带来一些问题，如对用户的行为无法感知导致的节点不能复用的问题等。</p>
-<p>​ 这里我们从插入一个节点开始，探究 prosemirror 视图更新的过程。这篇文章略去 DOMObserver 对 Mutation 的分析，直接从视图更新开始，假设我们已经拿到了新的 state，接下来我们来分析下 prosemirror 是如何将新的 state 应用到视图上的。</p>
-<h3 id="更新过程"><a href="#更新过程" class="headerlink" title="更新过程"></a>更新过程</h3><p>​ 拿到新的<code>state</code>之后会调用<code>view.updatState(newState)</code>，<code>updateState</code>会调用<code>docView.update</code>更新视图。docView 实际上就是 NodeViewDesc 的一个实例，默认的 NodeViewDesc 的更新方法为：</p>
+<p><code>viewDesc</code> 主要提供了匹配节点，获取索引，状态标记等等方法，帮助 <code>prosemirror</code> 更好地处理 <code>state</code> 与 <code>dom</code> 的状态同步</p>
+<h2 id="视图更新"><a href="#视图更新" class="headerlink" title="视图更新"></a><strong>视图更新</strong></h2><p>​ 对于 <code>prosemirror</code> 来说，视图的更新面向的不是用户做了什么操作，而是面向 <code>state</code>。</p>
+<p>用户做了什么操作这部分由 <code>DOMObserver</code> 去处理并应用到 <code>state</code> 上，视图显示的状态与 <code>state</code> 强相关，抹平了处理用户行为的复杂性，简化了更新的处理，但同样会带来一些问题，如对用户的行为无法感知导致的节点不能复用的问题等。</p>
+<p>​ 这里我们从插入一个节点开始，探究 <code>prosemirror</code> 视图更新的过程。这篇文章略去 <code>DOMObserver</code> 对 <code>Mutation</code> 的分析，直接从视图更新开始，假设我们已经拿到了新的 <code>state</code>，接下来我们来分析下 <code>prosemirror</code> 是如何将新的 <code>state</code> 应用到视图上的。</p>
+<h3 id="更新过程"><a href="#更新过程" class="headerlink" title="更新过程"></a>更新过程</h3><p>​ 拿到新的<code>state</code>之后会调用<code>view.updateState(newState)</code>，<code>updateState</code>会调用<code>docView.update</code>更新视图。<code>docView</code> 实际上就是 <code>NodeViewDesc</code> 的一个实例，默认的 <code>NodeViewDesc</code> 的更新方法为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">update(node, outerDeco, innerDeco, view) &#123;</span><br><span class="line">  if (this.dirty &#x3D;&#x3D; NODE_DIRTY || !node.sameMarkup(this.node)) return false</span><br><span class="line">  this.updateInner(node, outerDeco, innerDeco, view)</span><br><span class="line">  return true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这一步会判断当前节点的数据是否发生变化，如果发生变化，返回 false，会重建整个节点。返回 true 则证明更新成功，进行子节点的更新。</p>
 <p>​ 我们在看下<code>updateInner</code>这个方法：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">updateInner(node, outerDeco, innerDeco, view) &#123;</span><br><span class="line">  this.updateOuterDeco(outerDeco)</span><br><span class="line">  this.node &#x3D; node</span><br><span class="line">  this.innerDeco &#x3D; innerDeco</span><br><span class="line">  if (this.contentDOM) this.updateChildren(view, this.posAtStart)</span><br><span class="line">  this.dirty &#x3D; NOT_DIRTY</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>他会先更新外部的 decoration，然后进行更新过程中最核心的处理<code>updateChildren</code>，主要可以分为下面几个部分：</p>
+<p>他会先更新外部的 <code>decoration</code>，然后进行更新过程中最核心的处理<code>updateChildren</code>，主要可以分为下面几个部分：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">updateChildren() &#123;</span><br><span class="line">    &#x2F;&#x2F; ...</span><br><span class="line">    const updater &#x3D; new ViewTreeUpdater(docView)</span><br><span class="line">    &#x2F;&#x2F; ...</span><br><span class="line">    iterDeco(node, decos, onDeco, onNode);</span><br><span class="line">    &#x2F;&#x2F; ...</span><br><span class="line">    if (updater.changed) renderChildren()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ol>
-<li>首先会根据 docView 创建一个 updater，主要服务于更新过程（代表当前的节点更新树，拥有子节点的子节点会创建自己的 updater）。updater 中会匹配 docView 中的 node 和 descs，从后往前匹配，保存相同的 desc（preMatched）和最后一个匹配的 desc 的 offset（preMatchedOffset）。</li>
-<li>根据 doc 和 decorations 的信息顺序遍历更新，根据匹配到的 node 和 deco 的分别调用 onNode 以及 onDeco 方法更新。</li>
-<li>若 updater 中有更新，属性 changed 会被置为 true，并进行子节点的渲染（根据实际的 dom 以及更新后的 descs）</li>
-<li>从上面的描述，可以看到最核心的方法在第二部份，我们主要分析下第二步中 onNode 做的事情</li>
+<li>首先会根据 <code>docView</code> 创建一个 <code>updater</code>，主要服务于更新过程（代表当前的节点更新树，拥有子节点的子节点会创建自己的 <code>updater</code>）。<code>updater</code> 中会匹配 <code>docView</code> 中的 <code>node</code> 和 <code>descs</code>，从后往前匹配，保存相同的 <code>desc（preMatched）</code>和最后一个匹配的 <code>desc</code> 的 <code>offset（preMatchedOffset）</code>。</li>
+<li>根据 <code>doc</code> 和 <code>decorations</code> 的信息顺序遍历更新，根据匹配到的 <code>node</code> 和 <code>deco</code> 的分别调用 <code>onNode</code> 以及 <code>onDeco</code> 方法更新。</li>
+<li>若 <code>updater</code> 中有更新，属性 <code>changed</code> 会被置为 <code>true</code>，并进行子节点的渲染（根据实际的 <code>dom</code> 以及更新后的 <code>descs</code>）</li>
+<li>从上面的描述，可以看到最核心的方法在第二部份，我们主要分析下第二步中 <code>onNode</code> 做的事情</li>
 </ol>
 <h3 id="节点更新"><a href="#节点更新" class="headerlink" title="节点更新"></a>节点更新</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">onNode &#x3D; (child, outerDeco, innerDeco, i) &#x3D;&gt; &#123;</span><br><span class="line">  &#x2F;&#x2F; Make sure the wrapping mark descs match the node&#39;s marks.</span><br><span class="line">  updater.syncToMarks(child.marks, inline, view)</span><br><span class="line">  &#x2F;&#x2F; Either find an existing desc that exactly matches this node,</span><br><span class="line">  &#x2F;&#x2F; and drop the descs before it.</span><br><span class="line">  updater.findNodeMatch(child, outerDeco, innerDeco, i) ||</span><br><span class="line">  &#x2F;&#x2F; Or try updating the next desc to reflect this node.</span><br><span class="line">  updater.updateNextNode(child, outerDeco, innerDeco, view, i) ||</span><br><span class="line">  &#x2F;&#x2F; Or just add it as a new desc.</span><br><span class="line">  updater.addNode(child, outerDeco, innerDeco, view, off)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ol>
-<li><p><code>syncToMarks()</code>用于更新 mark。</p>
+<li><p><code>syncToMarks()</code>用于更新 <code>mark</code>。</p>
 </li>
 <li><p>之后便开始对 Node 的更新操作，总结起来就是三步：</p>
 <ol>
-<li>findeNodeMatch：在 updater 中寻找是否有 viewDesc 的 node 等于当前 node（最多匹配当前位置的后四位，不匹配最后一位。至于为什么最多只匹配后四位？可能是出于性能考虑吧，作者没有明确说这一点），若没有，进入下一步</li>
+<li><code>findNodeMatch</code>：在 <code>updater</code> 中寻找是否有 <code>viewDesc</code> 的 <code>node</code> 等于当前 <code>node</code>（最多匹配当前位置的后四位，不匹配最后一位。至于为什么最多只匹配后四位？可能是出于性能考虑吧，作者没有明确说这一点），若没有，进入下一步</li>
 </ol>
 </li>
 </ol>
@@ -225,86 +225,86 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">matchesNode(node, outerDeco, innerDeco) &#123;</span><br><span class="line">  return this.dirty &#x3D;&#x3D; NOT_DIRTY &amp;&amp; node.eq(this.node) &amp;&amp;</span><br><span class="line">  sameOuterDeco(outerDeco, this.outerDeco) &amp;&amp; innerDeco.eq(this.innerDeco)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Node</span><br><span class="line">eq(other) &#123;</span><br><span class="line">  return this &#x3D;&#x3D; other || (this.sameMarkup(other) &amp;&amp; this.content.eq(other.content))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ol>
-<li><code>updateNextNode</code>：若 updater 的 children 中当前位置是 NodeViewDesc 类型，分两种情况<ol>
-<li>若在 updater 的 preMatched 中存在且索引 preMatch 加上 preMatchOffset 等于当前 node 再 docView.children 中 index，尝试更新节点，否则视为流转到下一步（这一步这么判断的原因是：如果 preMatch+preMatchOffset != index，则证明 updater 中的数据有误，docView.children 中的数据可能有修改，此时以 state 的数据为准）</li>
-<li>若在 updater 的 preMatched 中不存在，尝试更新节点，否则视为流转到下一步</li>
+<li><code>updateNextNode</code>：若 <code>updater</code> 的 <code>children</code> 中当前位置是 <code>NodeViewDesc</code> 类型，分两种情况<ol>
+<li>若在 <code>updater</code> 的 <code>preMatched</code> 中存在且索引 preMatch 加上 preMatchOffset 等于当前 node 再 <code>docView.children</code> 中 <code>index</code>，尝试更新节点，否则视为流转到下一步（这一步这么判断的原因是：如果 <code>preMatch+preMatchOffset != index</code>，则证明 <code>updater</code> 中的数据有误，<code>docView.children</code> 中的数据可能有修改，此时以 <code>state</code> 的数据为准）</li>
+<li>若在 <code>updater</code> 的 <code>preMatched</code> 中不存在，尝试更新节点，否则视为流转到下一步</li>
 </ol>
 </li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">updateNextNode(node, outerDeco, innerDeco, view, index) &#123;</span><br><span class="line">    if (this.index &#x3D;&#x3D; this.top.children.length) return false</span><br><span class="line">    let next &#x3D; this.top.children[this.index]</span><br><span class="line">    if (next instanceof NodeViewDesc) &#123;</span><br><span class="line">      let preMatch &#x3D; this.preMatched.indexOf(next)</span><br><span class="line">      if (preMatch &gt; -1 &amp;&amp; preMatch + this.preMatchOffset !&#x3D; index) return false</span><br><span class="line">      let nextDOM &#x3D; next.dom</span><br><span class="line"></span><br><span class="line">      &#x2F;&#x2F; ...</span><br><span class="line"></span><br><span class="line">      if (next.update(node, outerDeco, innerDeco, view)) &#123;</span><br><span class="line">        if (next.dom !&#x3D; nextDOM) this.changed &#x3D; true</span><br><span class="line">        this.index++</span><br><span class="line">        return true</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ol>
-<li><code>addNode</code>：这一步就是直接在 updater 的 children 中当前索引的位置直接插入新创建的 viewDesc</li>
+<li><code>addNode</code>：这一步就是直接在 <code>updater</code> 的 <code>children</code> 中当前索引的位置直接插入新创建的 <code>viewDesc</code></li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">addNode(node, outerDeco, innerDeco, view, pos) &#123;</span><br><span class="line">    this.top.children.splice(this.index++, 0, NodeViewDesc.create(...))</span><br><span class="line">    this.changed &#x3D; true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="渲染到视图"><a href="#渲染到视图" class="headerlink" title="渲染到视图"></a>渲染到视图</h3><p>若有需要重建的节点或者删除的节点，updater.changed 会被置为 true，进入 dom 层面的操作。</p>
+<h3 id="渲染到视图"><a href="#渲染到视图" class="headerlink" title="渲染到视图"></a>渲染到视图</h3><p>若有需要重建的节点或者删除的节点，<code>updater.changed</code> 会被置为 <code>true</code>，进入 <code>dom</code> 层面的操作。</p>
 <ul>
-<li>此时的操作以 update 后的 viewDescs（此时即为 docView.children）的数据为准，调整当前视图中 dom 展示的节点，不会有位置的调整，不匹配就销毁，不存在就重建。</li>
+<li>此时的操作以 <code>update</code> 后的 <code>viewDescs</code>（此时即为 <code>docView.children</code>）的数据为准，调整当前视图中 <code>dom</code> 展示的节点，不会有位置的调整，不匹配就销毁，不存在就重建。</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function renderDescs(parentDOM, descs) &#123;</span><br><span class="line">  let dom &#x3D; parentDOM.firstChild</span><br><span class="line">  for (let i &#x3D; 0; i &lt; descs.length; i++) &#123;</span><br><span class="line">    let desc &#x3D; descs[i], childDOM &#x3D; desc.dom</span><br><span class="line">    &#x2F;&#x2F; dom为当前视图中的dom，childDOM为desc对应的dom</span><br><span class="line">    if (childDOM.parentNode &#x3D;&#x3D; parentDOM) &#123; &#x2F;&#x2F; 证明Child在视图中存在</span><br><span class="line">      while (childDOM !&#x3D; dom) dom &#x3D; rm(dom) &#x2F;&#x2F; rm()会返回nextSibling，清除不匹配的dom</span><br><span class="line">      dom &#x3D; dom.nextSibling</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      parentDOM.insertBefore(childDOM, dom)</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;&#x2F; ...</span><br><span class="line">  &#125;</span><br><span class="line">  while (dom) dom &#x3D; rm(dom)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>通过上面我们了解 prosemirror 中视图更新处理的过程，实际上就是 state 到 DOM 的过程，prosemirorr 中视图的更新都通过这个过程完成。</p>
+<p>通过上面我们了解 <code>prosemirror</code> 中视图更新处理的过程，实际上就是 <code>state</code> 到 <code>DOM</code> 的过程，<code>prosemirror</code> 中视图的更新都通过这个过程完成。</p>
 <h2 id="更新过程-1"><a href="#更新过程-1" class="headerlink" title="更新过程"></a><strong>更新过程</strong></h2><p>​ 基于上面说到的规则，我们分析下以下几种输入行为下的更新过程</p>
 <h3 id="新增"><a href="#新增" class="headerlink" title="新增"></a>新增</h3><ul>
-<li>新增节点不能在 findNodeMatch 找到，会在当前位置重建，其他的节点都能在旧的 docView 找到，不用重建</li>
+<li>新增节点不能在 <code>findNodeMatch</code> 找到，会在当前位置重建，其他的节点都能在旧的 <code>docView</code> 找到，不用重建</li>
 </ul>
 <p><img src="/posts/prosemirror-state-to-dom/update-first.png" alt="img"></p>
 <h3 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h3><ul>
-<li>与新增节点一致，主要区别在于 updateNextNode 这一步，调用就 viewdesc 的 update 方法，若 update 返回 false，增视为需要重建节点，否则视为成功更新。若这一步为 customNodeView，我们则可以干预这个过程</li>
-<li>下图展示返回 false 的情况，旧的 node2 会在匹配到 node3 时被 destory</li>
+<li>与新增节点一致，主要区别在于 <code>updateNextNode</code> 这一步，调用就 <code>viewdesc</code> 的 <code>update</code> 方法，若 <code>update</code> 返回 <code>false</code>，增视为需要重建节点，否则视为成功更新。若这一步为 <code>customNodeView</code>，我们则可以干预这个过程</li>
+<li>下图展示返回 <code>false</code> 的情况，旧的 <code>node2</code> 会在匹配到 <code>node3</code> 时被 <code>destroy</code></li>
 </ul>
 <p><img src="/posts/prosemirror-state-to-dom/update-second.png" alt="img"></p>
 <ul>
-<li>图展示返回 true 的情况，所有节点都能匹配到不需要重建</li>
+<li>图展示返回 <code>true</code> 的情况，所有节点都能匹配到不需要重建</li>
 </ul>
 <p><img src="/posts/prosemirror-state-to-dom/update-third.png" alt="img"></p>
 <h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><ul>
-<li>删除节点后旧的 viewdesc 中能匹配到所有的 node，匹配到 node 会销毁新旧 index 之间的所有的 viewdesc</li>
+<li>删除节点后旧的 <code>viewdesc</code> 中能匹配到所有的 <code>node</code>，匹配到 <code>node</code> 会销毁新旧 <code>index</code> 之间的所有的 <code>viewdesc</code></li>
 </ul>
 <p><img src="/posts/prosemirror-state-to-dom/update-fourth.png" alt="img"></p>
 <h3 id="移动"><a href="#移动" class="headerlink" title="移动"></a>移动</h3><ul>
-<li>移动的情况比较特殊，跟拖动的距离以变化的位置都有关系（主要和 findNodeMatch 的处理有关系）<ul>
+<li>移动的情况比较特殊，跟拖动的距离以变化的位置都有关系（主要和 <code>findNodeMatch</code> 的处理有关系）<ul>
 <li>把节点从前面移动到后面!</li>
 </ul>
 </li>
 </ul>
 <p><img src="/posts/prosemirror-state-to-dom/update-fifth.png" alt="img"></p>
 <ul>
-<li><p>这种情况下，重建的节点会是拖动的节点，比如上图的情况中，findNodeMatch 在匹配到 3 时，拖动的节点 2 会被销毁，直到遍历到最后被重建。</p>
+<li><p>这种情况下，重建的节点会是拖动的节点，比如上图的情况中，<code>findNodeMatch</code> 在匹配到 <code>3</code> 时，拖动的节点 <code>2</code> 会被销毁，直到遍历到最后被重建。</p>
 </li>
 <li><p>把节点从后面拖动到前面，这时候的处理分情况：</p>
 <ul>
-<li>非最后一位移动，且距离小于 4</li>
+<li>非最后一位移动，且距离小于 <code>4</code></li>
 </ul>
 </li>
 </ul>
 <p><img src="/posts/prosemirror-state-to-dom/update-sixth.png" alt="img"></p>
 <ul>
-<li><p>这种情况下，因为 4 在 findNodeMatch 中可以被找到（index: 0, found: 4)，会导致 0 到 4 之间的节点被销毁。所以这种情况下，1、2、3 会被重建，而 4 不会被重建。</p>
+<li><p>这种情况下，因为 <code>4</code> 在 <code>findNodeMatch</code> 中可以被找到 <code>index: 0, found: 4)</code>，会导致 <code>0</code> 到 <code>4</code> 之间的节点被销毁。所以这种情况下，<code>1</code>、<code>2</code>、<code>3</code> 会被重建，而 <code>4</code> 不会被重建。</p>
 </li>
-<li><p>最后一位移动或者是距离大于 4</p>
+<li><p>最后一位移动或者是距离大于 <code>4</code></p>
 </li>
 </ul>
 <p><img src="/posts/prosemirror-state-to-dom/update-seventh.png" alt="img"></p>
 <ul>
-<li>这种情况下，由于 5 不会在 findNodeMatch 中找到，所以会在首位重建节点。匹配到 4 之后遍历结束，销毁剩余节点。所以这种情况下 5 会被重建。</li>
+<li>这种情况下，由于 <code>5</code> 不会在 <code>findNodeMatch</code> 中找到，所以会在首位重建节点。匹配到 <code>4</code> 之后遍历结束，销毁剩余节点。所以这种情况下 <code>5</code> 会被重建。</li>
 </ul>
-<h2 id="Mark-更新过程"><a href="#Mark-更新过程" class="headerlink" title="Mark 更新过程"></a><strong>Mark 更新过程</strong></h2><p>Mark 的更新过程与 Node 的更新有比较大的区别，Mark 在 state 中是作为 node 的一个属性，而在 ViewDesc 中，他则是作为一个高层级的节点，他可以包括其他节点（包括自己本身）,所以他在 state 和 docView 中的结构是不一致的。</p>
+<h2 id="Mark-更新过程"><a href="#Mark-更新过程" class="headerlink" title="Mark 更新过程"></a><strong>Mark 更新过程</strong></h2><p><code>Mark</code> 的更新过程与 Node 的更新有比较大的区别，<code>Mark</code> 在 <code>state</code> 中是作为 <code>node</code> 的一个属性，而在 <code>ViewDesc</code> 中，他则是作为一个高层级的节点，他可以包括其他节点（包括自己本身）,所以他在 <code>state</code> 和 <code>docView</code> 中的结构是不一致的。</p>
 <p>比如<code>&lt;p&gt;&lt;strong&gt;123&lt;/strong&gt;&lt;/p&gt;</code> :</p>
 <p><img src="/posts/prosemirror-state-to-dom/mark-view.png" alt="img"></p>
 <p><img src="/posts/prosemirror-state-to-dom/text-node.png" alt="img"></p>
-<p>而 prosemirror 在对 dom 做渲染时，是以更新后的 ViewDescs 为准，所以 promirror 更新的逻辑是这样：</p>
+<p>而 <code>prosemirror</code> 在对 <code>dom</code> 做渲染时，是以更新后的 <code>ViewDesc</code> 为准，所以 <code>prosemirror</code> 更新的逻辑是这样：</p>
 <ul>
-<li><p>在每次 onDeco，onNode 都会调用<code>SyncToMarks</code></p>
+<li><p>在每次 <code>onDeco</code>，<code>onNode</code> 都会调用<code>SyncToMarks</code></p>
 <p>，主要做几个操作</p>
 <ul>
-<li>当前有 marks，匹配后两位内是否存在相同的 mark<ul>
-<li>存在：销毁当前位置与匹配到的位置之间的内容，帮当前顶层和位置推入 updater.stack，位置重置为 0，把 MarkViewDesc 放到 updater.top，开始对 MarkViewDesc 中的内容做更新。</li>
-<li>不存在：创建一个新的 MarkViewDesc</li>
+<li>当前有 <code>marks</code>，匹配后两位内是否存在相同的 <code>mark</code><ul>
+<li>存在：销毁当前位置与匹配到的位置之间的内容，帮当前顶层和位置推入 <code>updater.stack</code>，位置重置为 <code>0</code>，把 <code>MarkViewDesc</code> 放到 <code>updater.top</code>，开始对 <code>MarkViewDesc</code> 中的内容做更新。</li>
+<li>不存在：创建一个新的 <code>MarkViewDesc</code></li>
 </ul>
 </li>
-<li>当前没有 marks，updater.stack 中有内容，MarkViewDesc 出栈，updater 状态恢复</li>
+<li>当前没有 <code>marks，``updater.stack</code> 中有内容，<code>MarkViewDesc</code> <code>出栈，updater</code> 状态恢复</li>
 </ul>
 </li>
 </ul>
