@@ -16,8 +16,19 @@
 <meta property="og:description" content="上一篇文章简单介绍了 prosemirror 内部如何对输入行为作出反应，这一篇文章主要介绍一下 prosemirror 如何完成从 state 到浏览器 DOM 的渲染。 视图使用 prosemirror 时我们有以下三种定义编辑器内视图渲染的方式：  直接使用 nodeType&#x2F;markType 中的 toDOM 属性，实际渲染由prosemirror-model提供的DOMSerialize">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/pm-view.png">
-<meta property="article:published_time" content="2020-10-08T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-09-17T15:43:23.524Z">
+<meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/update-first.png">
+<meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/update-second.png">
+<meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/update-third.png">
+<meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/update-fourth.png">
+<meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/update-fifth.png">
+<meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/update-sixth.png">
+<meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/update-seventh.png">
+<meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/mark-view.png">
+<meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/text-node.png">
+<meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/mark-weried.gif">
+<meta property="og:image" content="http://lastnigtic.cn/posts/prosemirror-state-to-dom/mark-update.png">
+<meta property="article:published_time" content="2020-09-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-04-27T14:10:25.144Z">
 <meta property="article:author" content="lastnigtic">
 <meta property="article:tag" content="lastnigtic">
 <meta name="twitter:card" content="summary">
@@ -63,10 +74,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="Previous post " href="/posts/apng-editor/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Previous post " href="/posts/prosemirror-state-modify/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="Next post " href="/posts/prosemirror-state-modify/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Next post " href="/posts/prosemirror-first/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="Back to top " href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="Share post " href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -94,7 +105,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE"><span class="toc-number">1.</span> <span class="toc-text">视图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ViewDesc"><span class="toc-number">2.</span> <span class="toc-text">ViewDesc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE%E6%9B%B4%E6%96%B0"><span class="toc-number">3.</span> <span class="toc-text">视图更新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">更新过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E6%9B%B4%E6%96%B0"><span class="toc-number">3.2.</span> <span class="toc-text">节点更新</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE"><span class="toc-number">1.</span> <span class="toc-text">视图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ViewDesc"><span class="toc-number">2.</span> <span class="toc-text">ViewDesc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE%E6%9B%B4%E6%96%B0"><span class="toc-number">3.</span> <span class="toc-text">视图更新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">更新过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E6%9B%B4%E6%96%B0"><span class="toc-number">3.2.</span> <span class="toc-text">节点更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E5%88%B0%E8%A7%86%E5%9B%BE"><span class="toc-number">3.3.</span> <span class="toc-text">渲染到视图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B-1"><span class="toc-number">4.</span> <span class="toc-text">更新过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E"><span class="toc-number">4.1.</span> <span class="toc-text">新增</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0"><span class="toc-number">4.2.</span> <span class="toc-text">更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">4.3.</span> <span class="toc-text">删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8"><span class="toc-number">4.4.</span> <span class="toc-text">移动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mark-%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B"><span class="toc-number">5.</span> <span class="toc-text">Mark 更新过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -118,7 +129,7 @@
       
     <div class="postdate">
       
-        <time datetime="2020-10-08T16:00:00.000Z" itemprop="datePublished">2020-10-09</time>
+        <time datetime="2020-09-05T16:00:00.000Z" itemprop="datePublished">2020-09-06</time>
         
       
     </div>
@@ -207,129 +218,103 @@
 </ol>
 </li>
 </ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">findNodeMatch(node, outerDeco, innerDeco, index) &#123;</span><br><span class="line">    let found &#x3D; -1, preMatch</span><br><span class="line">    &#x2F;&#x2F; ...</span><br><span class="line">    if (preMatch &amp;&amp; preMatch.matchesNode(node, outerDeco, innerDeco)) &#123;</span><br><span class="line">      found &#x3D; children.indexOf(preMatch)</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      for (let i &#x3D; this.index, e &#x3D; Math.min(children.length, i + 5); i &lt; e; i++) &#123;</span><br><span class="line">        &#x2F;&#x2F; matches</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if (found &lt; 0) return false</span><br><span class="line">    this.destroyBetween(this.index, found)</span><br><span class="line">    this.index++</span><br><span class="line">    return true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如何确定是同一个节点？</p>
+<p>主要就是判断是内存地址，节点属性，<code>decorations</code>，自元素是否是一致的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">matchesNode(node, outerDeco, innerDeco) &#123;</span><br><span class="line">  return this.dirty &#x3D;&#x3D; NOT_DIRTY &amp;&amp; node.eq(this.node) &amp;&amp;</span><br><span class="line">  sameOuterDeco(outerDeco, this.outerDeco) &amp;&amp; innerDeco.eq(this.innerDeco)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Node</span><br><span class="line">eq(other) &#123;</span><br><span class="line">  return this &#x3D;&#x3D; other || (this.sameMarkup(other) &amp;&amp; this.content.eq(other.content))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><code>updateNextNode</code>：若 updater 的 children 中当前位置是 NodeViewDesc 类型，分两种情况<ol>
+<li>若在 updater 的 preMatched 中存在且索引 preMatch 加上 preMatchOffset 等于当前 node 再 docView.children 中 index，尝试更新节点，否则视为流转到下一步（这一步这么判断的原因是：如果 preMatch+preMatchOffset != index，则证明 updater 中的数据有误，docView.children 中的数据可能有修改，此时以 state 的数据为准）</li>
+<li>若在 updater 的 preMatched 中不存在，尝试更新节点，否则视为流转到下一步</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">updateNextNode(node, outerDeco, innerDeco, view, index) &#123;</span><br><span class="line">    if (this.index &#x3D;&#x3D; this.top.children.length) return false</span><br><span class="line">    let next &#x3D; this.top.children[this.index]</span><br><span class="line">    if (next instanceof NodeViewDesc) &#123;</span><br><span class="line">      let preMatch &#x3D; this.preMatched.indexOf(next)</span><br><span class="line">      if (preMatch &gt; -1 &amp;&amp; preMatch + this.preMatchOffset !&#x3D; index) return false</span><br><span class="line">      let nextDOM &#x3D; next.dom</span><br><span class="line"></span><br><span class="line">      &#x2F;&#x2F; ...</span><br><span class="line"></span><br><span class="line">      if (next.update(node, outerDeco, innerDeco, view)) &#123;</span><br><span class="line">        if (next.dom !&#x3D; nextDOM) this.changed &#x3D; true</span><br><span class="line">        this.index++</span><br><span class="line">        return true</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><code>addNode</code>：这一步就是直接在 updater 的 children 中当前索引的位置直接插入新创建的 viewDesc</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">addNode(node, outerDeco, innerDeco, view, pos) &#123;</span><br><span class="line">    this.top.children.splice(this.index++, 0, NodeViewDesc.create(...))</span><br><span class="line">    this.changed &#x3D; true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="渲染到视图"><a href="#渲染到视图" class="headerlink" title="渲染到视图"></a>渲染到视图</h3><p>若有需要重建的节点或者删除的节点，updater.changed 会被置为 true，进入 dom 层面的操作。</p>
 <ul>
-<li>```<br>findNodeMatch(node, outerDeco, innerDeco, index) {<pre><code>let found = -1, preMatch
-// ...
-if (preMatch &amp;&amp; preMatch.matchesNode(node, outerDeco, innerDeco)) &#123;
-  found = children.indexOf(preMatch)
-&#125; else &#123;
-  for (let i = this.index, e = Math.min(children.length, i + 5); i &lt; e; i++) &#123;
-    // matches
-  &#125;
-&#125;
-if (found &lt; 0) return false
-this.destroyBetween(this.index, found)
-this.index++
-return true
-</code></pre>
-}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  如何确定是同一个节点？</span><br><span class="line"></span><br><span class="line">主要就是判断是内存地址，节点属性，&#96;decorations&#96;，自元素是否是一致的。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-matchesNode(node, outerDeco, innerDeco) {<br>return this.dirty == NOT_DIRTY &amp;&amp; node.eq(this.node) &amp;&amp;<br>sameOuterDeco(outerDeco, this.outerDeco) &amp;&amp; innerDeco.eq(this.innerDeco)<br>}</li>
+<li>此时的操作以 update 后的 viewDescs（此时即为 docView.children）的数据为准，调整当前视图中 dom 展示的节点，不会有位置的调整，不匹配就销毁，不存在就重建。</li>
 </ul>
-<p>// Node<br>eq(other) {<br>  return this == other || (this.sameMarkup(other) &amp;&amp; this.content.eq(other.content))<br>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">1. &#96;updateNextNode&#96;：若 updater 的 children 中当前位置是 NodeViewDesc 类型，分两种情况</span><br><span class="line">   1. 若在 updater 的 preMatched 中存在且索引 preMatch 加上 preMatchOffset 等于当前 node 再 docView.children 中 index，尝试更新节点，否则视为流转到下一步（这一步这么判断的原因是：如果 preMatch+preMatchOffset !&#x3D; index，则证明 updater 中的数据有误，docView.children 中的数据可能有修改，此时以 state 的数据为准）</span><br><span class="line">   2. 若在 updater 的 preMatched 中不存在，尝试更新节点，否则视为流转到下一步</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>updateNextNode(node, outerDeco, innerDeco, view, index) {<br>    if (this.index == this.top.children.length) return false<br>    let next = this.top.children[this.index]<br>    if (next instanceof NodeViewDesc) {<br>      let preMatch = this.preMatched.indexOf(next)<br>      if (preMatch &gt; -1 &amp;&amp; preMatch + this.preMatchOffset != index) return false<br>      let nextDOM = next.dom<br>.<br>      // …</p>
-<pre><code>  if (next.update(node, outerDeco, innerDeco, view)) &#123;
-    if (next.dom != nextDOM) this.changed = true
-    this.index++
-    return true
-  &#125;
-&#125;
-return false
-</code></pre>
-<p>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">1. &#96;addNode&#96;：这一步就是直接在 updater 的 children 中当前索引的位置直接插入新创建的 viewDesc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>addNode(node, outerDeco, innerDeco, view, pos) {<br>    this.top.children.splice(this.index++, 0, NodeViewDesc.create(…))<br>    this.changed = true<br>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 渲染到视图</span><br><span class="line"></span><br><span class="line">若有需要重建的节点或者删除的节点，updater.changed 会被置为 true，进入 dom 层面的操作。</span><br><span class="line"></span><br><span class="line">- 此时的操作以 update 后的 viewDescs（此时即为 docView.children）的数据为准，调整当前视图中 dom 展示的节点，不会有位置的调整，不匹配就销毁，不存在就重建。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>function renderDescs(parentDOM, descs) {<br>  let dom = parentDOM.firstChild<br>  for (let i = 0; i &lt; descs.length; i++) {<br>    let desc = descs[i], childDOM = desc.dom<br>    // dom为当前视图中的dom，childDOM为desc对应的dom<br>    if (childDOM.parentNode == parentDOM) { // 证明Child在视图中存在<br>      while (childDOM != dom) dom = rm(dom) // rm()会返回nextSibling，清除不匹配的dom<br>      dom = dom.nextSibling<br>    } else {<br>      parentDOM.insertBefore(childDOM, dom)<br>    }<br>    // …<br>  }<br>  while (dom) dom = rm(dom)<br>}</p>
-<pre><code>
-通过上面我们了解 prosemirror 中视图更新处理的过程，实际上就是 state 到 DOM 的过程，prosemirorr 中视图的更新都通过这个过程完成。
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function renderDescs(parentDOM, descs) &#123;</span><br><span class="line">  let dom &#x3D; parentDOM.firstChild</span><br><span class="line">  for (let i &#x3D; 0; i &lt; descs.length; i++) &#123;</span><br><span class="line">    let desc &#x3D; descs[i], childDOM &#x3D; desc.dom</span><br><span class="line">    &#x2F;&#x2F; dom为当前视图中的dom，childDOM为desc对应的dom</span><br><span class="line">    if (childDOM.parentNode &#x3D;&#x3D; parentDOM) &#123; &#x2F;&#x2F; 证明Child在视图中存在</span><br><span class="line">      while (childDOM !&#x3D; dom) dom &#x3D; rm(dom) &#x2F;&#x2F; rm()会返回nextSibling，清除不匹配的dom</span><br><span class="line">      dom &#x3D; dom.nextSibling</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      parentDOM.insertBefore(childDOM, dom)</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;&#x2F; ...</span><br><span class="line">  &#125;</span><br><span class="line">  while (dom) dom &#x3D; rm(dom)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-## **更新过程**
-
-​ 基于上面说到的规则，我们分析下以下几种输入行为下的更新过程
-
-### 新增
-
-- 新增节点不能在 findNodeMatch 找到，会在当前位置重建，其他的节点都能在旧的 docView 找到，不用重建
-
-![img](update-first.png)
-
-### 更新
-
-- 与新增节点一致，主要区别在于 updateNextNode 这一步，调用就 viewdesc 的 update 方法，若 update 返回 false，增视为需要重建节点，否则视为成功更新。若这一步为 customNodeView，我们则可以干预这个过程
-- 下图展示返回 false 的情况，旧的 node2 会在匹配到 node3 时被 destory
-
-![img](update-second.png)
-
-- 图展示返回 true 的情况，所有节点都能匹配到不需要重建
-
-![img](update-third.png)
-
-### 删除
-
-- 删除节点后旧的 viewdesc 中能匹配到所有的 node，匹配到 node 会销毁新旧 index 之间的所有的 viewdesc
-
-![img](update-fourth.png)
-
-### 移动
-
-- 移动的情况比较特殊，跟拖动的距离以变化的位置都有关系（主要和 findNodeMatch 的处理有关系）
-  - 把节点从前面移动到后面!
-
-![img](update-fifth.png)
-
-- 这种情况下，重建的节点会是拖动的节点，比如上图的情况中，findNodeMatch 在匹配到 3 时，拖动的节点 2 会被销毁，直到遍历到最后被重建。
-
-- 把节点从后面拖动到前面，这时候的处理分情况：
-  - 非最后一位移动，且距离小于 4
-
-![img](update-sixth.png)
-
-- 这种情况下，因为 4 在 findNodeMatch 中可以被找到（index: 0, found: 4)，会导致 0 到 4 之间的节点被销毁。所以这种情况下，1、2、3 会被重建，而 4 不会被重建。
-
-- 最后一位移动或者是距离大于 4
-
-![img](update-seventh.png)
-
-- 这种情况下，由于 5 不会在 findNodeMatch 中找到，所以会在首位重建节点。匹配到 4 之后遍历结束，销毁剩余节点。所以这种情况下 5 会被重建。
-
-## **Mark 更新过程**
-
-Mark 的更新过程与 Node 的更新有比较大的区别，Mark 在 state 中是作为 node 的一个属性，而在 ViewDesc 中，他则是作为一个高层级的节点，他可以包括其他节点（包括自己本身）,所以他在 state 和 docView 中的结构是不一致的。
-
-比如`&lt;p&gt;&lt;strong&gt;123&lt;/strong&gt;&lt;/p&gt;` :
-
-![img](mark-view.png)
-
-![img](text-node.png)
-
-而 prosemirror 在对 dom 做渲染时，是以更新后的 ViewDescs 为准，所以 promirror 更新的逻辑是这样：
-
-- 在每次 onDeco，onNode 都会调用`SyncToMarks`
-
-  ，主要做几个操作
-
-  - 当前有 marks，匹配后两位内是否存在相同的 mark
-    - 存在：销毁当前位置与匹配到的位置之间的内容，帮当前顶层和位置推入 updater.stack，位置重置为 0，把 MarkViewDesc 放到 updater.top，开始对 MarkViewDesc 中的内容做更新。
-    - 不存在：创建一个新的 MarkViewDesc
-  - 当前没有 marks，updater.stack 中有内容，MarkViewDesc 出栈，updater 状态恢复
-
-所以会有一个奇怪的现象：当后面第二位有同样的 mark 时，会导致中间的节点没有必要的重建：
-
-![img](mark-weried.gif)
-
-这个过程的变化如下图所示：
-
-![img](mark-update.png)
-
-因为 3 和 1 被设置的 mark 一致，所以会匹配到 3，1 和 nodeView 被销毁，这个行为自然是不应该的，作者的解释是为了修复这个[Issues](https://github.com/prosemirror/prosemirror/issues/872)，重用 mark 时做了更激进的匹配（这也是一个优化的点，贡献代码的机会 XD）。
-
-## **总结**
-
-​ 这篇文章主要讲了 prosemirror 是如 state 与 DOM 之间的关系，举了几个比较简单的例子，实际情况下，还需要考虑 Decoration 的渲染，mark 与 decoration 与 node 嵌套的渲染，以及 ltr，rtl 的顺序等等的处理，节点的比对和渲染复杂度指数上升。节点复用在这些情况下无法保证，所以开发一些功能时，不应当依赖某个视图的生命周期。
-
-初窥 prosemirror 的渲染流程，与 react 一样，使用 prosemirror 时我们一般不需要关心到视图这一层，这也是现在各主流富文本编辑器框的一套思路。后面的文章会继续探究用户形如何被捕获，state 内部如何更新，索引如何构建等的流程。
-</code></pre>
+<p>通过上面我们了解 prosemirror 中视图更新处理的过程，实际上就是 state 到 DOM 的过程，prosemirorr 中视图的更新都通过这个过程完成。</p>
+<h2 id="更新过程-1"><a href="#更新过程-1" class="headerlink" title="更新过程"></a><strong>更新过程</strong></h2><p>​ 基于上面说到的规则，我们分析下以下几种输入行为下的更新过程</p>
+<h3 id="新增"><a href="#新增" class="headerlink" title="新增"></a>新增</h3><ul>
+<li>新增节点不能在 findNodeMatch 找到，会在当前位置重建，其他的节点都能在旧的 docView 找到，不用重建</li>
+</ul>
+<p><img src="/posts/prosemirror-state-to-dom/update-first.png" alt="img"></p>
+<h3 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h3><ul>
+<li>与新增节点一致，主要区别在于 updateNextNode 这一步，调用就 viewdesc 的 update 方法，若 update 返回 false，增视为需要重建节点，否则视为成功更新。若这一步为 customNodeView，我们则可以干预这个过程</li>
+<li>下图展示返回 false 的情况，旧的 node2 会在匹配到 node3 时被 destory</li>
+</ul>
+<p><img src="/posts/prosemirror-state-to-dom/update-second.png" alt="img"></p>
+<ul>
+<li>图展示返回 true 的情况，所有节点都能匹配到不需要重建</li>
+</ul>
+<p><img src="/posts/prosemirror-state-to-dom/update-third.png" alt="img"></p>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><ul>
+<li>删除节点后旧的 viewdesc 中能匹配到所有的 node，匹配到 node 会销毁新旧 index 之间的所有的 viewdesc</li>
+</ul>
+<p><img src="/posts/prosemirror-state-to-dom/update-fourth.png" alt="img"></p>
+<h3 id="移动"><a href="#移动" class="headerlink" title="移动"></a>移动</h3><ul>
+<li>移动的情况比较特殊，跟拖动的距离以变化的位置都有关系（主要和 findNodeMatch 的处理有关系）<ul>
+<li>把节点从前面移动到后面!</li>
+</ul>
+</li>
+</ul>
+<p><img src="/posts/prosemirror-state-to-dom/update-fifth.png" alt="img"></p>
+<ul>
+<li><p>这种情况下，重建的节点会是拖动的节点，比如上图的情况中，findNodeMatch 在匹配到 3 时，拖动的节点 2 会被销毁，直到遍历到最后被重建。</p>
+</li>
+<li><p>把节点从后面拖动到前面，这时候的处理分情况：</p>
+<ul>
+<li>非最后一位移动，且距离小于 4</li>
+</ul>
+</li>
+</ul>
+<p><img src="/posts/prosemirror-state-to-dom/update-sixth.png" alt="img"></p>
+<ul>
+<li><p>这种情况下，因为 4 在 findNodeMatch 中可以被找到（index: 0, found: 4)，会导致 0 到 4 之间的节点被销毁。所以这种情况下，1、2、3 会被重建，而 4 不会被重建。</p>
+</li>
+<li><p>最后一位移动或者是距离大于 4</p>
+</li>
+</ul>
+<p><img src="/posts/prosemirror-state-to-dom/update-seventh.png" alt="img"></p>
+<ul>
+<li>这种情况下，由于 5 不会在 findNodeMatch 中找到，所以会在首位重建节点。匹配到 4 之后遍历结束，销毁剩余节点。所以这种情况下 5 会被重建。</li>
+</ul>
+<h2 id="Mark-更新过程"><a href="#Mark-更新过程" class="headerlink" title="Mark 更新过程"></a><strong>Mark 更新过程</strong></h2><p>Mark 的更新过程与 Node 的更新有比较大的区别，Mark 在 state 中是作为 node 的一个属性，而在 ViewDesc 中，他则是作为一个高层级的节点，他可以包括其他节点（包括自己本身）,所以他在 state 和 docView 中的结构是不一致的。</p>
+<p>比如<code>&lt;p&gt;&lt;strong&gt;123&lt;/strong&gt;&lt;/p&gt;</code> :</p>
+<p><img src="/posts/prosemirror-state-to-dom/mark-view.png" alt="img"></p>
+<p><img src="/posts/prosemirror-state-to-dom/text-node.png" alt="img"></p>
+<p>而 prosemirror 在对 dom 做渲染时，是以更新后的 ViewDescs 为准，所以 promirror 更新的逻辑是这样：</p>
+<ul>
+<li><p>在每次 onDeco，onNode 都会调用<code>SyncToMarks</code></p>
+<p>，主要做几个操作</p>
+<ul>
+<li>当前有 marks，匹配后两位内是否存在相同的 mark<ul>
+<li>存在：销毁当前位置与匹配到的位置之间的内容，帮当前顶层和位置推入 updater.stack，位置重置为 0，把 MarkViewDesc 放到 updater.top，开始对 MarkViewDesc 中的内容做更新。</li>
+<li>不存在：创建一个新的 MarkViewDesc</li>
+</ul>
+</li>
+<li>当前没有 marks，updater.stack 中有内容，MarkViewDesc 出栈，updater 状态恢复</li>
+</ul>
+</li>
+</ul>
+<p>所以会有一个奇怪的现象：当后面第二位有同样的 mark 时，会导致中间的节点没有必要的重建：</p>
+<p><img src="/posts/prosemirror-state-to-dom/mark-weried.gif" alt="img"></p>
+<p>这个过程的变化如下图所示：</p>
+<p><img src="/posts/prosemirror-state-to-dom/mark-update.png" alt="img"></p>
+<p>因为 3 和 1 被设置的 mark 一致，所以会匹配到 3，1 和 nodeView 被销毁，这个行为自然是不应该的，作者的解释是为了修复这个<a target="_blank" rel="noopener" href="https://github.com/prosemirror/prosemirror/issues/872">Issues</a>，重用 mark 时做了更激进的匹配（这也是一个优化的点，贡献代码的机会 XD）。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h2><p>​ 这篇文章主要讲了 prosemirror 是如 state 与 DOM 之间的关系，举了几个比较简单的例子，实际情况下，还需要考虑 Decoration 的渲染，mark 与 decoration 与 node 嵌套的渲染，以及 ltr，rtl 的顺序等等的处理，节点的比对和渲染复杂度指数上升。节点复用在这些情况下无法保证，所以开发一些功能时，不应当依赖某个视图的生命周期。</p>
+<p>初窥 prosemirror 的渲染流程，与 react 一样，使用 prosemirror 时我们一般不需要关心到视图这一层，这也是现在各主流富文本编辑器框的一套思路。后面的文章会继续探究用户形如何被捕获，state 内部如何更新，索引如何构建等的流程。</p>
 
   </div>
 </article>
@@ -351,7 +336,7 @@ Mark 的更新过程与 Node 的更新有比较大的区别，Mark 在 state 中
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE"><span class="toc-number">1.</span> <span class="toc-text">视图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ViewDesc"><span class="toc-number">2.</span> <span class="toc-text">ViewDesc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE%E6%9B%B4%E6%96%B0"><span class="toc-number">3.</span> <span class="toc-text">视图更新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">更新过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E6%9B%B4%E6%96%B0"><span class="toc-number">3.2.</span> <span class="toc-text">节点更新</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE"><span class="toc-number">1.</span> <span class="toc-text">视图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ViewDesc"><span class="toc-number">2.</span> <span class="toc-text">ViewDesc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE%E6%9B%B4%E6%96%B0"><span class="toc-number">3.</span> <span class="toc-text">视图更新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">更新过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E6%9B%B4%E6%96%B0"><span class="toc-number">3.2.</span> <span class="toc-text">节点更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E5%88%B0%E8%A7%86%E5%9B%BE"><span class="toc-number">3.3.</span> <span class="toc-text">渲染到视图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B-1"><span class="toc-number">4.</span> <span class="toc-text">更新过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E"><span class="toc-number">4.1.</span> <span class="toc-text">新增</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0"><span class="toc-number">4.2.</span> <span class="toc-text">更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">4.3.</span> <span class="toc-text">删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8"><span class="toc-number">4.4.</span> <span class="toc-text">移动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mark-%E6%9B%B4%E6%96%B0%E8%BF%87%E7%A8%8B"><span class="toc-number">5.</span> <span class="toc-text">Mark 更新过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
